@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-07-16T16:43:22Z
+
+Thanks for your review @weaverryan and @bocharsky-bw. I fix the syntax issues you point out, rename webmamba to symfonycasts, and now the user reference directly app.scss as in the last comment. Tell me what you thinks about all this changes! Cheers 😁🧡
+
+---------------------------------------------------------------------------
+
+by bendavies at 2023-07-20T22:32:30Z
+
+I think i have a feature request to be considered before this is merged.
+
+The request is to support compiling/watching more than one scss file.
+This is required to support [page specific css](https://symfony.com/doc/current/frontend/asset_mapper.html#page-specific-css-javascript), and to migrate effectively from "multiple entrypoints" in webpack encore.
+
+this is supported fine by the cli:
+https://sass-lang.com/documentation/cli/dart-sass/#many-to-many-mode
+
+this would require changing the `root_sass` configuration option to an array node to accept multiple paths
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-07-21T00:07:52Z
+
+That makes sense to me. I can’t immediately think why this would cause any major issues.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-07-24T16:29:54Z
+
+@bendavies thanks for your review! I implemented the support for multiples sass files. 😁
+
+---------------------------------------------------------------------------
+
+by bendavies at 2023-07-24T16:32:25Z
+
+> @bendavies thanks for your review! I implemented the support for multiples sass files. 😁
+
+great! thanks
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-08-09T10:08:44Z
+
+Great! Lets have a final check, all your comment should be fixed now! 😁
