@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the SymfonyCasts SassBundle package.
+ * Copyright (c) SymfonyCasts <https://symfonycasts.com/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfonycasts\SassBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -12,7 +19,7 @@ class FunctionalTest extends KernelTestCase
     {
         file_put_contents(__DIR__.'/fixtures/assets/app.css', <<<EOF
             p {
-               color: red; 
+               color: red;
             }
             EOF
         );

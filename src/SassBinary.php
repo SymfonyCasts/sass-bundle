@@ -34,7 +34,7 @@ class SassBinary
     public function createProcess(array $args): Process
     {
         if (null === $this->binaryPath) {
-            $binary = $this->binaryDownloadDir.'/dart-sass/sass';
+            $binary = $this->getDefaultBinaryPath();
             if (!is_file($binary)) {
                 $this->downloadExecutable();
             }
@@ -89,7 +89,12 @@ class SassBinary
         unlink($targetPath);
         unlink($this->binaryDownloadDir.'/'.self::getBinaryName().'.tar');
 
-        chmod($this->binaryPath, 0777);
+        $binaryPath = $this->getDefaultBinaryPath();
+        if (!is_file($binaryPath)) {
+            throw new \Exception(sprintf('Could not find downloaded binary in "%s".', $binaryPath));
+        }
+
+        chmod($binaryPath, 0777);
     }
 
     public function getBinaryName(): string
@@ -134,5 +139,10 @@ class SassBinary
     private function buildBinaryFileName(string $os): string
     {
         return 'dart-sass-'.self::VERSION.'-'.$os;
+    }
+
+    private function getDefaultBinaryPath(): string
+    {
+        return $this->binaryDownloadDir.'/dart-sass/sass';
     }
 }
