@@ -65,6 +65,34 @@ php bin/console sass:build
 php bin/console asset-map:compile
 ```
 
+## Limitation: url() Relative Paths
+
+When using `url()` inside a Sass file, currently, the path must be relative to
+the *root* `.scss` file. For example, suppose the root `.scss` file is:
+
+```scss
+/* assets/styles/app.scss */
+import 'tools/base';
+```
+
+Assume there is an `assets/images/login-bg.png` file that you want to refer
+to from `base.css`:
+
+```scss
+/* assets/styles/tools/base.scss */
+.splash {
+    /* This SHOULD work, but doesn't */
+    background-image: url('../../images/login-bg.png');
+
+    /* This DOES work: it's relative to app.scss */
+    background-image: url('../images/login-bg.png');
+}
+```
+
+It should be possible to use `url()` with a path relative to the current file.
+However, that is not currently possible. See [this issue](https://github.com/SymfonyCasts/sass-bundle/issues/2)
+for more details.
+
 ## Configuration
 
 To see the full config from this bundle, run:
