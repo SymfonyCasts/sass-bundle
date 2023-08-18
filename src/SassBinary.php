@@ -90,6 +90,7 @@ class SassBinary
             $archive->extractTo($this->binaryDownloadDir);
             $archive->close();
             unlink($targetPath);
+
             return;
         } else {
             $archive = new \PharData($targetPath);
