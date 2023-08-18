@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the SymfonyCasts SassBundle package.
+ * Copyright (c) SymfonyCasts <https://symfonycasts.com/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfonycasts\SassBundle\Tests\fixtures;
 
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -22,7 +29,7 @@ class SassTestKernel extends Kernel
     {
         return [
             new FrameworkBundle(),
-            new SymfonycastsSassBundle()
+            new SymfonycastsSassBundle(),
         ];
     }
 
@@ -32,6 +39,10 @@ class SassTestKernel extends Kernel
             'secret' => 'foo',
             'test' => true,
             'http_method_override' => true,
+            'handle_all_throwables' => true,
+            'php_errors' => [
+                'log' => true,
+            ],
             'asset_mapper' => [
                 'paths' => [
                     __DIR__.'/assets',
@@ -41,7 +52,7 @@ class SassTestKernel extends Kernel
 
         $container->loadFromExtension('symfonycasts_sass', [
             'root_sass' => [__DIR__.'/assets/styles/app.scss'],
-            'binary' => null
+            'binary' => null,
         ]);
     }
 
