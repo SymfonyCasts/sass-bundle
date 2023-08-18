@@ -1,0 +1,138 @@
+<?php
+
+/*
+ * This file is part of the SymfonyCasts SassBundle package.
+ * Copyright (c) SymfonyCasts <https://symfonycasts.com/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symfonycasts\SassBundle;
+
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Process\Process;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
+class SassBinary
+{
+    private const VERSION = '1.63.6';
+    private HttpClientInterface $httpClient;
+
+    public function __construct(
+        private string $binaryDownloadDir,
+        private ?string $binaryPath = null,
+        private ?SymfonyStyle $output = null,
+        HttpClientInterface $httpClient = null
+    ) {
+        $this->httpClient = $httpClient ?? HttpClient::create();
+    }
+
+    /**
+     * @param array<string> $args
+     */
+    public function createProcess(array $args): Process
+    {
+        if (null === $this->binaryPath) {
+            $binary = $this->binaryDownloadDir.'/dart-sass/sass';
+            if (!is_file($binary)) {
+                $this->downloadExecutable();
+            }
+        } else {
+            $binary = $this->binaryPath;
+        }
+
+        array_unshift($args, $binary);
+
+        return new Process($args);
+    }
+
+    public function downloadExecutable(): void
+    {
+        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s.tar.gz', self::VERSION, $this->getBinaryName());
+
+        $this->output?->note('Downloading Sass binary from '.$url);
+
+        if (!is_dir($this->binaryDownloadDir)) {
+            mkdir($this->binaryDownloadDir, 0777, true);
+        }
+
+        $targetPath = $this->binaryDownloadDir.'/'.self::getBinaryName().'.tar.gz';
+        $progressBar = null;
+
+        $response = $this->httpClient->request('GET', $url, [
+            'on_progress' => function (int $dlNow, int $dlSize, array $info) use (&$progressBar): void {
+                if (0 === $dlSize) {
+                    return;
+                }
+
+                if (!$progressBar) {
+                    $progressBar = $this->output?->createProgressBar($dlSize);
+                }
+
+                $progressBar?->setProgress($dlNow);
+            },
+        ]);
+
+        $fileHandler = fopen($targetPath, 'w');
+        foreach ($this->httpClient->stream($response) as $chunk) {
+            fwrite($fileHandler, $chunk->getContent());
+        }
+
+        fclose($fileHandler);
+        $progressBar?->finish();
+        $this->output?->writeln('');
+        $archive = new \PharData($targetPath);
+        $archive->decompress();
+        $archive->extractTo($this->binaryDownloadDir);
+
+        unlink($targetPath);
+        unlink($this->binaryDownloadDir.'/'.self::getBinaryName().'.tar');
+
+        chmod($this->binaryPath, 0777);
+    }
+
+    public function getBinaryName(): string
+    {
+        $os = strtolower(\PHP_OS);
+        $machine = strtolower(php_uname('m'));
+
+        if (str_contains($os, 'darwin')) {
+            if ('arm64' === $machine) {
+                return $this->buildBinaryFileName('macos-arm64');
+            }
+
+            if ('x86_64' === $machine) {
+                return $this->buildBinaryFileName('macos-x64');
+            }
+
+            throw new \Exception(sprintf('No matching machine found for Darwin platform (Machine: %s).', $machine));
+        }
+
+        if (str_contains($os, 'linux')) {
+            if ('arm64' === $machine || 'aarch64' === $machine) {
+                return $this->buildBinaryFileName('linux-arm64');
+            }
+            if ('x86_64' === $machine) {
+                return $this->buildBinaryFileName('linux-x64');
+            }
+
+            throw new \Exception(sprintf('No matching machine found for Linux platform (Machine: %s).', $machine));
+        }
+
+        if (str_contains($os, 'win')) {
+            if ('x86_64' === $machine || 'amd64' === $machine) {
+                return $this->buildBinaryFileName('windows-x64');
+            }
+
+            throw new \Exception(sprintf('No matching machine found for Windows platform (Machine: %s).', $machine));
+        }
+
+        throw new \Exception(sprintf('Unknown platform or architecture (OS: %s, Machine: %s).', $os, $machine));
+    }
+
+    private function buildBinaryFileName(string $os): string
+    {
+        return 'dart-sass-'.self::VERSION.'-'.$os;
+    }
+}
