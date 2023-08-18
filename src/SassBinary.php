@@ -88,7 +88,7 @@ class SassBinary
         $archive->extractTo($this->binaryDownloadDir);
 
         unlink($targetPath);
-        unlink($this->binaryDownloadDir.'/'.self::getBinaryName().'.tar');
+        unlink($this->binaryDownloadDir.'/'.self::getBinaryName().($isZip ? '.zip' : '.tar'));
 
         $binaryPath = $this->getDefaultBinaryPath();
         if (!is_file($binaryPath)) {
