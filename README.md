@@ -65,6 +65,11 @@ php bin/console sass:build
 php bin/console asset-map:compile
 ```
 
+## Limitation: Sourcemaps
+
+The `.map` file sourcemap is not currently made available by this package.
+See [this issue](https://github.com/SymfonyCasts/sass-bundle/issues/6) for more details.
+
 ## Limitation: url() Relative Paths
 
 When using `url()` inside a Sass file, currently, the path must be relative to

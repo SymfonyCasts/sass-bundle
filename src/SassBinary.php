@@ -83,12 +83,24 @@ class SassBinary
         fclose($fileHandler);
         $progressBar?->finish();
         $this->output?->writeln('');
-        $archive = new \PharData($targetPath);
-        $archive->decompress();
-        $archive->extractTo($this->binaryDownloadDir);
+
+        if ($isZip) {
+            $archive = new \ZipArchive();
+            $archive->open($targetPath);
+            $archive->extractTo($this->binaryDownloadDir);
+            $archive->close();
+            unlink($targetPath);
+            return;
+        } else {
+            $archive = new \PharData($targetPath);
+            $archive->decompress();
+            $archive->extractTo($this->binaryDownloadDir);
+
+            // delete the .tar (the .tar.gz is deleted below)
+            unlink(substr($targetPath, 0, -3));
+        }
 
         unlink($targetPath);
-        unlink($this->binaryDownloadDir.'/'.self::getBinaryName().($isZip ? '.zip' : '.tar'));
 
         $binaryPath = $this->getDefaultBinaryPath();
         if (!is_file($binaryPath)) {

@@ -12,6 +12,7 @@ namespace Symfonycasts\SassBundle\Tests;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\MappedAsset;
+use Symfony\Component\Filesystem\Filesystem;
 
 class FunctionalTest extends KernelTestCase
 {
@@ -23,6 +24,11 @@ class FunctionalTest extends KernelTestCase
             }
             EOF
         );
+
+        if (file_exists(__DIR__.'/fixtures/var')) {
+            $filesystem = new Filesystem();
+            $filesystem->remove(__DIR__.'/fixtures/var');
+        }
     }
 
     protected function tearDown(): void
