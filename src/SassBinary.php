@@ -49,7 +49,8 @@ class SassBinary
 
     public function downloadExecutable(): void
     {
-        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s.tar.gz', self::VERSION, $this->getBinaryName());
+        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s', self::VERSION, $this->getBinaryName());
+        $isZip = str_ends_with($url, '.zip');
 
         $this->output?->note('Downloading Sass binary from '.$url);
 
@@ -57,7 +58,7 @@ class SassBinary
             mkdir($this->binaryDownloadDir, 0777, true);
         }
 
-        $targetPath = $this->binaryDownloadDir.'/'.self::getBinaryName().'.tar.gz';
+        $targetPath = $this->binaryDownloadDir.'/'.self::getBinaryName();
         $progressBar = null;
 
         $response = $this->httpClient->request('GET', $url, [
@@ -127,7 +128,7 @@ class SassBinary
 
         if (str_contains($os, 'win')) {
             if ('x86_64' === $machine || 'amd64' === $machine) {
-                return $this->buildBinaryFileName('windows-x64');
+                return $this->buildBinaryFileName('windows-x64', true);
             }
 
             throw new \Exception(sprintf('No matching machine found for Windows platform (Machine: %s).', $machine));
@@ -136,9 +137,9 @@ class SassBinary
         throw new \Exception(sprintf('Unknown platform or architecture (OS: %s, Machine: %s).', $os, $machine));
     }
 
-    private function buildBinaryFileName(string $os): string
+    private function buildBinaryFileName(string $os, bool $isWindows = false): string
     {
-        return 'dart-sass-'.self::VERSION.'-'.$os;
+        return 'dart-sass-'.self::VERSION.'-'.$os.($isWindows ? '.zip' : '.tar.gz');
     }
 
     private function getDefaultBinaryPath(): string
