@@ -162,9 +162,4 @@ class SassBinary
     {
         return $this->binaryDownloadDir.'/dart-sass/sass';
     }
-
-    private function getDefaultBinaryPath(): string
-    {
-        return $this->binaryDownloadDir.'/dart-sass/sass';
-    }
 }
