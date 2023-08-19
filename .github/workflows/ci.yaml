@@ -20,6 +20,7 @@ jobs:
             php-version-matrix: '["8.2"]'
             php-version-lowest: '8.2'
             runs-on: windows-latest
+            php-extensions: 'zip'
 
     composer-validate:
         uses: SymfonyCasts/.github/.github/workflows/composer-validate.yaml@main
