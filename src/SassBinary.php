@@ -85,8 +85,8 @@ class SassBinary
         $this->output?->writeln('');
 
         if ($isZip) {
-            if (!class_exists(\ZipArchive::class)) {
-                throw new \Exception('Cannot unzip the downloaded binary. Please install the Zip PHP extension.');
+            if (!extension_loaded('zip')) {
+                throw new \Exception('Cannot unzip the downloaded sass binary. Please install the "zip" PHP extension.');
             }
             $archive = new \ZipArchive();
             $archive->open($targetPath);
