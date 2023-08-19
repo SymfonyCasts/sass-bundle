@@ -39,6 +39,10 @@ class SassTestKernel extends Kernel
             'secret' => 'foo',
             'test' => true,
             'http_method_override' => true,
+            'handle_all_throwables' => true,
+            'php_errors' => [
+                'log' => true,
+            ],
             'asset_mapper' => [
                 'paths' => [
                     __DIR__.'/assets',

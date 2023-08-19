@@ -49,7 +49,8 @@ class SassBinary
 
     public function downloadExecutable(): void
     {
-        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s.tar.gz', self::VERSION, $this->getBinaryName());
+        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s', self::VERSION, $this->getBinaryName());
+        $isZip = str_ends_with($url, '.zip');
 
         $this->output?->note('Downloading Sass binary from '.$url);
 
@@ -57,7 +58,7 @@ class SassBinary
             mkdir($this->binaryDownloadDir, 0777, true);
         }
 
-        $targetPath = $this->binaryDownloadDir.'/'.self::getBinaryName().'.tar.gz';
+        $targetPath = $this->binaryDownloadDir.'/'.self::getBinaryName();
         $progressBar = null;
 
         $response = $this->httpClient->request('GET', $url, [
@@ -82,12 +83,28 @@ class SassBinary
         fclose($fileHandler);
         $progressBar?->finish();
         $this->output?->writeln('');
-        $archive = new \PharData($targetPath);
-        $archive->decompress();
-        $archive->extractTo($this->binaryDownloadDir);
+
+        if ($isZip) {
+            if (!extension_loaded('zip')) {
+                throw new \Exception('Cannot unzip the downloaded sass binary. Please install the "zip" PHP extension.');
+            }
+            $archive = new \ZipArchive();
+            $archive->open($targetPath);
+            $archive->extractTo($this->binaryDownloadDir);
+            $archive->close();
+            unlink($targetPath);
+
+            return;
+        } else {
+            $archive = new \PharData($targetPath);
+            $archive->decompress();
+            $archive->extractTo($this->binaryDownloadDir);
+
+            // delete the .tar (the .tar.gz is deleted below)
+            unlink(substr($targetPath, 0, -3));
+        }
 
         unlink($targetPath);
-        unlink($this->binaryDownloadDir.'/'.self::getBinaryName().'.tar');
 
         $binaryPath = $this->getDefaultBinaryPath();
         if (!is_file($binaryPath)) {
@@ -127,7 +144,7 @@ class SassBinary
 
         if (str_contains($os, 'win')) {
             if ('x86_64' === $machine || 'amd64' === $machine) {
-                return $this->buildBinaryFileName('windows-x64');
+                return $this->buildBinaryFileName('windows-x64', true);
             }
 
             throw new \Exception(sprintf('No matching machine found for Windows platform (Machine: %s).', $machine));
@@ -136,9 +153,14 @@ class SassBinary
         throw new \Exception(sprintf('Unknown platform or architecture (OS: %s, Machine: %s).', $os, $machine));
     }
 
-    private function buildBinaryFileName(string $os): string
+    private function buildBinaryFileName(string $os, bool $isWindows = false): string
     {
-        return 'dart-sass-'.self::VERSION.'-'.$os;
+        return 'dart-sass-'.self::VERSION.'-'.$os.($isWindows ? '.zip' : '.tar.gz');
+    }
+
+    private function getDefaultBinaryPath(): string
+    {
+        return $this->binaryDownloadDir.'/dart-sass/sass';
     }
 
     private function getDefaultBinaryPath(): string
