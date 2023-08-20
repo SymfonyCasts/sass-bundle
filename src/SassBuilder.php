@@ -24,7 +24,8 @@ class SassBuilder
         private readonly array $sassPaths,
         private readonly string $cssPath,
         private readonly string $projectRootDir,
-        private readonly ?string $binaryPath
+        private readonly ?string $binaryPath,
+        private readonly bool $embedSourcemap,
     ) {
     }
 
@@ -36,6 +37,10 @@ class SassBuilder
 
         if ($watch) {
             $args[] = '--watch';
+        }
+
+        if ($this->embedSourcemap) {
+            $args[] = '--embed-source-map';
         }
 
         $process = $binary->createProcess($args);
