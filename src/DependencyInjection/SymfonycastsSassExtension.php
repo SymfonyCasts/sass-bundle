@@ -19,8 +19,12 @@ use Symfony\Component\DependencyInjection\Loader;
 
 class SymfonycastsSassExtension extends Extension implements ConfigurationInterface
 {
+    private bool $isDebug;
+
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $this->isDebug = $container->getParameter('kernel.debug');
+
         $loader = new Loader\PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('services.php');
 
@@ -31,6 +35,7 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
             ->replaceArgument(0, $config['root_sass'])
             ->replaceArgument(1, '%kernel.project_dir%/var/sass')
             ->replaceArgument(3, $config['binary'])
+            ->replaceArgument(4, $config['embed_sourcemap'])
         ;
 
         $container->findDefinition('sass.css_asset_compiler')
@@ -63,6 +68,10 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                 ->scalarNode('binary')
                     ->info('The Sass binary to use')
                     ->defaultNull()
+                    ->end()
+                ->scalarNode('embed_sourcemap')
+                    ->info('Whether to embed the sourcemap in the compiled CSS. By default, enabled only when debug mode is on.')
+                    ->defaultValue($this->isDebug)
                     ->end()
             ->end()
         ;
