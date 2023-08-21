@@ -70,7 +70,7 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                     ->defaultNull()
                     ->end()
                 ->scalarNode('embed_sourcemap')
-                    ->info('Whether to embed the sourcemap in the compiled CSS')
+                    ->info('Whether to embed the sourcemap in the compiled CSS. By default, enabled only when debug mode is on.')
                     ->defaultValue($this->isDebug)
                     ->end()
             ->end()
