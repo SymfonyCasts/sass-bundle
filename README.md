@@ -19,9 +19,9 @@ composer require symfonycasts/sass-bundle
 Start by writing your first Sass file `assets/styles/app.scss`, and let's add some basic style
 
 ```scss
-// assets/styles/app.scss
+/* assets/styles/app.scss */
 
-$red: #fc030b
+$red: #fc030b;
 
 body {
   background: $red;
@@ -57,6 +57,25 @@ When you run `sass:build`, that binary is uses to compile Sass file into a
 `var/sass/app.built.css` file. Finally, when the contents of assets/styles/app.scss is requested, the bundle swaps the contents of that file
 with the contents of `var/sass/app.built.css`. Nice!
 
+## Using Bootstrap Sass
+
+[Bootstrap](https://getbootstrap.com/) is available as Sass, allowing you to customize
+the look and feel of your app. An easy way to get the source Sass files is via
+a Composer package:
+
+```shell
+composer require twbs/bootstrap-sass
+```
+
+Now, import the core `bootstrap.scss` from your `app.scss` file:
+
+```scss
+/* Override some Bootstrap variables */
+$red: #FB4040;
+
+@import '../../vendor/twbs/bootstrap/scss/bootstrap';
+```
+
 ## Deploying
 
 When you deploy, run `sass:build` command before the `asset-map:compile` command so the built file is available:
@@ -64,11 +83,6 @@ When you deploy, run `sass:build` command before the `asset-map:compile` command
 php bin/console sass:build
 php bin/console asset-map:compile
 ```
-
-## Limitation: Sourcemaps
-
-The `.map` file sourcemap is not currently made available by this package.
-See [this issue](https://github.com/SymfonyCasts/sass-bundle/issues/6) for more details.
 
 ## Limitation: url() Relative Paths
 
