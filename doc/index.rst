@@ -56,7 +56,7 @@ How Does it work
 
 The first time you run one of the Sass commands, the bundle will download the correct Sass binary for your system into the ``bin/dart-sass`` directory.
 
-When you run ``sass:build``, that binary is used to compile Sass files into a ``var/sass/app.built.css`` file. Finally, when the contents of assets/styles/app.scss is requested, the bundle swaps the contents of that file with the contents of ``var/sass/app.built.css``. Nice!
+When you run ``sass:build``, that binary is used to compile Sass files into a ``var/sass/app.built.css`` file. Finally, when the contents of ``assets/styles/app.scss`` are requested, the bundle swaps the contents of that file with the contents of ``var/sass/app.built.css``. Nice!
 
 Using Bootstrap Sass
 ----------------------
