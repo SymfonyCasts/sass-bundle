@@ -50,11 +50,11 @@ And that's it!
 
 ## How Does it work
 
-The first time you run one of the Sass commands, the bundle will download the correct Sass binary for you system in to `bin/dart-sass`
+The first time you run one of the Sass commands, the bundle will download the correct Sass binary for your system in to `bin/dart-sass`
 directory.
 
-When you run `sass:build`, that binary is uses to compile Sass file into a
-`var/sass/app.built.css` file. Finally, when the contents of assets/styles/app.scss is requested, the bundle swaps the contents of that file
+When you run `sass:build`, that binary is used to compile Sass file into a
+`var/sass/app.built.css` file. Finally, when the contents of `assets/styles/app.scss` are requested, the bundle swaps the contents of that file
 with the contents of `var/sass/app.built.css`. Nice!
 
 ## Using Bootstrap Sass
@@ -79,6 +79,7 @@ $red: #FB4040;
 ## Deploying
 
 When you deploy, run `sass:build` command before the `asset-map:compile` command so the built file is available:
+
 ```shell
 php bin/console sass:build
 php bin/console asset-map:compile
@@ -115,15 +116,18 @@ for more details.
 ## Configuration
 
 To see the full config from this bundle, run:
+
 ```shell
 php bin/console config:dump symfonycasts_sass
 ```
+
 The main option is `root_sass` option, which default to `assets/styles/app.scss`. This represents the source Sass file.
 
 ## Using a different binary
 
 This bundle already installed for you the right binary. However if you already have a binary installed on your machine
 you can instruct the bundle to use that binary, set the `binary` option:
+
 ```yaml
 symfonycasts_sass:
     binary: 'node_modules/.bin/sass'
