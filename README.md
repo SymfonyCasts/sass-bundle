@@ -1,134 +1,30 @@
-# Sass For Symfony!
+Sass For Symfony!
+=================
 
 This bundle make it easy to use Sass with Symfony's AssetMapper Component
 (no Node required!).
 
 - Automatically downloads the correct Sass binary
-- Adds a `sass:build` command to build and watch your Sass changes
+- Adds a ``sass:build`` command to build and watch your Sass changes
 
-## Installation
+## Documentation
 
-Install the bundle
+Read the documentation at: https://symfony.com/bundles/SassBundle/current/index.html
 
-```shell
-composer require symfonycasts/sass-bundle
-```
+## Support us & Symfony
 
-## Usage
+Is this package useful! We're *thrilled* 😍!
 
-Start by writing your first Sass file `assets/styles/app.scss`, and let's add some basic style
+A lot of time & effort from the Symfonycasts team & the Symfony community
+goes into creating and maintaining these packages. You can support us +
+Symfony (and learn a bucket-load) by grabbing a subscription to [SymfonyCasts](https://symfonycasts.com)!
 
-```scss
-/* assets/styles/app.scss */
+## Credits
 
-$red: #fc030b;
+- [Ryan Weaver](https://github.com/weaverryan)
+- [Mathéo Daninos](https://github.com/Webmamba)
+- [All Contributors](../../contributors)
 
-body {
-  background: $red;
-}
-```
+## License
 
-Then point your styles in your template.
-
-```php
-{# templates/base.html.twig #}
-
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
-{% endblock %}
-```
-
-That's right! You point directly to the `.scss` file. But don't worry, the final built `.css` file will be returned!
-
-Then run the command:
-
-```shell
-php bin/console sass:build --watch
-```
-
-And that's it!
-
-## How Does it work
-
-The first time you run one of the Sass commands, the bundle will download the correct Sass binary for your system in to `bin/dart-sass`
-directory.
-
-When you run `sass:build`, that binary is used to compile Sass file into a
-`var/sass/app.built.css` file. Finally, when the contents of `assets/styles/app.scss` are requested, the bundle swaps the contents of that file
-with the contents of `var/sass/app.built.css`. Nice!
-
-## Using Bootstrap Sass
-
-[Bootstrap](https://getbootstrap.com/) is available as Sass, allowing you to customize
-the look and feel of your app. An easy way to get the source Sass files is via
-a Composer package:
-
-```shell
-composer require twbs/bootstrap-sass
-```
-
-Now, import the core `bootstrap.scss` from your `app.scss` file:
-
-```scss
-/* Override some Bootstrap variables */
-$red: #FB4040;
-
-@import '../../vendor/twbs/bootstrap/scss/bootstrap';
-```
-
-## Deploying
-
-When you deploy, run `sass:build` command before the `asset-map:compile` command so the built file is available:
-
-```shell
-php bin/console sass:build
-php bin/console asset-map:compile
-```
-
-## Limitation: url() Relative Paths
-
-When using `url()` inside a Sass file, currently, the path must be relative to
-the *root* `.scss` file. For example, suppose the root `.scss` file is:
-
-```scss
-/* assets/styles/app.scss */
-import 'tools/base';
-```
-
-Assume there is an `assets/images/login-bg.png` file that you want to refer
-to from `base.css`:
-
-```scss
-/* assets/styles/tools/base.scss */
-.splash {
-    /* This SHOULD work, but doesn't */
-    background-image: url('../../images/login-bg.png');
-
-    /* This DOES work: it's relative to app.scss */
-    background-image: url('../images/login-bg.png');
-}
-```
-
-It should be possible to use `url()` with a path relative to the current file.
-However, that is not currently possible. See [this issue](https://github.com/SymfonyCasts/sass-bundle/issues/2)
-for more details.
-
-## Configuration
-
-To see the full config from this bundle, run:
-
-```shell
-php bin/console config:dump symfonycasts_sass
-```
-
-The main option is `root_sass` option, which default to `assets/styles/app.scss`. This represents the source Sass file.
-
-## Using a different binary
-
-This bundle already installed for you the right binary. However if you already have a binary installed on your machine
-you can instruct the bundle to use that binary, set the `binary` option:
-
-```yaml
-symfonycasts_sass:
-    binary: 'node_modules/.bin/sass'
-```
+MIT License (MIT): see the [License File](LICENSE.md) for more details.
