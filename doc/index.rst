@@ -61,7 +61,7 @@ When you run ``sass:build``, that binary is used to compile Sass files into a ``
 Excluding Sass Files from AssetMapper
 -------------------------------------
 
-Because you have `.sass` files in your `assets/` directory, when you deploy, these
+Because you have `.scss` files in your `assets/` directory, when you deploy, these
 source files will be copied into the `public/assets/` directory. To prevent that,
 you can exclude them from asset mapper:
 
@@ -72,9 +72,12 @@ framework:
         paths:
             - assets/
         excluded_patterns:
-            - '*/assets/styles/*.scss'
-            - '*/assets/styles/**/*.scss'
+            - '*/assets/styles/_*.scss'
+            - '*/assets/styles/**/_*.scss'
 ```
+
+Note: be sure not to exclude your *main* SCSS file (e.g. ``assets/styles/app.scss``):
+this *is* used in AssetMapper and its contents are swapped for the final, built CSS.
 
 Using Bootstrap Sass
 --------------------
