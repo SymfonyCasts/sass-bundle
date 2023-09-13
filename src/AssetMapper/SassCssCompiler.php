@@ -26,7 +26,7 @@ class SassCssCompiler implements AssetCompilerInterface
     public function supports(MappedAsset $asset): bool
     {
         foreach ($this->scssPaths as $path) {
-            if (realpath($asset->sourcePath) === $path) {
+            if (realpath($asset->sourcePath) === realpath($path)) {
                 return true;
             }
         }
