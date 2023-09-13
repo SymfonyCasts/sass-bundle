@@ -143,7 +143,7 @@ class SassBinary
         }
 
         if (str_contains($os, 'win')) {
-            if ('x86_64' === $machine || 'amd64' === $machine) {
+            if ('x86_64' === $machine || 'amd64' === $machine || 'i586' === $machine) {
                 return $this->buildBinaryFileName('windows-x64', true);
             }
 
