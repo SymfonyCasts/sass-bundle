@@ -17,7 +17,7 @@ Install the bundle:
     $ composer require symfonycasts/sass-bundle
 
 Usage
-------
+-----
 
 Start by writing your first Sass file ``assets/styles/app.scss``, and let's add some basic style
 
@@ -51,15 +51,33 @@ Then run the command:
 
 And that's it!
 
-How Does it work
+How Does it work?
 -----------------
 
 The first time you run one of the Sass commands, the bundle will download the correct Sass binary for your system into the ``bin/dart-sass`` directory.
 
 When you run ``sass:build``, that binary is used to compile Sass files into a ``var/sass/app.built.css`` file. Finally, when the contents of ``assets/styles/app.scss`` are requested, the bundle swaps the contents of that file with the contents of ``var/sass/app.built.css``. Nice!
 
+Excluding Sass Files from AssetMapper
+-------------------------------------
+
+Because you have `.sass` files in your `assets/` directory, when you deploy, these
+source files will be copied into the `public/assets/` directory. To prevent that,
+you can exclude them from asset mapper:
+
+```yaml
+# config/packages/asset_mapper.yaml
+framework:
+    asset_mapper:
+        paths:
+            - assets/
+        excluded_patterns:
+            - '*/assets/styles/*.scss'
+            - '*/assets/styles/**/*.scss'
+```
+
 Using Bootstrap Sass
-----------------------
+--------------------
 
 `Bootstrap <https://getbootstrap.com/>`_ is available as Sass, allowing you to customize the look and feel of your app. An easy way to get the source Sass files is via a Composer package:
 
