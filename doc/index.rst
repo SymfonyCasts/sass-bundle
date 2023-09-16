@@ -61,20 +61,21 @@ When you run ``sass:build``, that binary is used to compile Sass files into a ``
 Excluding Sass Files from AssetMapper
 -------------------------------------
 
-Because you have `.scss` files in your `assets/` directory, when you deploy, these
-source files will be copied into the `public/assets/` directory. To prevent that,
+Because you have ``.scss`` files in your ``assets/`` directory, when you deploy, these
+source files will be copied into the ``public/assets/`` directory. To prevent that,
 you can exclude them from asset mapper:
 
-```yaml
-# config/packages/asset_mapper.yaml
-framework:
-    asset_mapper:
-        paths:
-            - assets/
-        excluded_patterns:
-            - '*/assets/styles/_*.scss'
-            - '*/assets/styles/**/_*.scss'
-```
+.. code-block:: yaml
+
+    # config/packages/asset_mapper.yaml
+    framework:
+        asset_mapper:
+            paths:
+                - assets/
+            excluded_patterns:
+                - '*/assets/styles/_*.scss'
+                - '*/assets/styles/**/_*.scss'
+
 
 Note: be sure not to exclude your *main* SCSS file (e.g. ``assets/styles/app.scss``):
 this *is* used in AssetMapper and its contents are swapped for the final, built CSS.
@@ -107,7 +108,7 @@ When you deploy, run ``sass:build`` command before the ``asset-map:compile`` com
     $ php bin/console sass:build
     $ php bin/console asset-map:compile
 
-Limitation: url() Relative Paths
+Limitation: ``url()`` Relative Paths
 --------------------------------
 
 When using ``url()`` inside a Sass file, currently, the path must be relative to the *root* ``.scss`` file. For example, suppose the root ``.scss`` file is:
