@@ -106,7 +106,7 @@ When you deploy, run ``sass:build`` command before the ``asset-map:compile`` com
     $ php bin/console sass:build
     $ php bin/console asset-map:compile
 
-Limitation: url() Relative Paths
+Limitation: ``url()`` Relative Paths
 --------------------------------
 
 When using ``url()`` inside a Sass file, currently, the path must be relative to the *root* ``.scss`` file. For example, suppose the root ``.scss`` file is:
