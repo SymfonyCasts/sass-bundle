@@ -51,7 +51,7 @@ Then run the command:
 
 And that's it!
 
-How Does it work?
+How Does it Work?
 -----------------
 
 The first time you run one of the Sass commands, the bundle will download the correct Sass binary for your system into the ``bin/dart-sass`` directory.
@@ -61,8 +61,8 @@ When you run ``sass:build``, that binary is used to compile Sass files into a ``
 Excluding Sass Files from AssetMapper
 -------------------------------------
 
-Because you have `.scss` files in your `assets/` directory, when you deploy, these
-source files will be copied into the `public/assets/` directory. To prevent that,
+Because you have ``.scss`` files in your ``assets/`` directory, when you deploy, these
+source files will be copied into the ``public/assets/`` directory. To prevent that,
 you can exclude them from asset mapper:
 
 ```yaml
