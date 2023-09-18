@@ -65,16 +65,15 @@ Because you have ``.scss`` files in your ``assets/`` directory, when you deploy,
 source files will be copied into the ``public/assets/`` directory. To prevent that,
 you can exclude them from asset mapper:
 
-```yaml
-# config/packages/asset_mapper.yaml
-framework:
-    asset_mapper:
-        paths:
-            - assets/
-        excluded_patterns:
-            - '*/assets/styles/_*.scss'
-            - '*/assets/styles/**/_*.scss'
-```
+.. code-block:: yaml
+    # config/packages/asset_mapper.yaml
+    framework:
+        asset_mapper:
+            paths:
+                - assets/
+            excluded_patterns:
+                - '*/assets/styles/_*.scss'
+                - '*/assets/styles/**/_*.scss'
 
 Note: be sure not to exclude your *main* SCSS file (e.g. ``assets/styles/app.scss``):
 this *is* used in AssetMapper and its contents are swapped for the final, built CSS.
