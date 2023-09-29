@@ -1,7 +1,7 @@
 Sass For Symfony!
 =================
 
-This bundle make it easy to use Sass with Symfony's AssetMapper Component
+This bundle makes it easy to use Sass with Symfony's AssetMapper Component
 (no Node required!).
 
 - Automatically downloads the correct Sass binary
