@@ -85,7 +85,7 @@ Using Bootstrap Sass
 
 .. code-block:: terminal
 
-    $ composer require twbs/bootstrap-sass
+    $ composer require twbs/bootstrap
 
 Now, import the core ``bootstrap.scss`` from your ``app.scss`` file:
 
