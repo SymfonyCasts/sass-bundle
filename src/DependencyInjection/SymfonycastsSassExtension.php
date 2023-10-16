@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Loader;
 
 class SymfonycastsSassExtension extends Extension implements ConfigurationInterface
 {
-    private bool $isDebug;
+    private bool $isDebug = false;
 
     public function load(array $configs, ContainerBuilder $container): void
     {
