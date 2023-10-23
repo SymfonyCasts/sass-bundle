@@ -30,6 +30,10 @@ class SassPublicPathAssetPathResolver implements PublicAssetsPathResolverInterfa
 
     public function getPublicFilesystemPath(): string
     {
+        if (!method_exists($this->decorator, 'getPublicFilesystemPath')) {
+            throw new \Exception('...');
+        }
+
         $path = $this->decorator->getPublicFilesystemPath();
 
         if (str_contains($path, '.scss')) {
