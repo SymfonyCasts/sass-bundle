@@ -5,6 +5,8 @@ use Symfonycasts\SassBundle\Command\SassBuildCommand;
 use Symfonycasts\SassBundle\SassBuilder;
 use Symfonycasts\SassBundle\AssetMapper\SassCssCompiler;
 use Symfonycasts\SassBundle\AssetMapper\SassPublicPathAssetPathResolver;
+use Symfonycasts\SassBundle\Listener\PreAssetsCompileEventListener;
+use Symfony\Component\AssetMapper\Event\PreAssetsCompileEvent;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_arg;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
@@ -35,10 +37,18 @@ return static function (ContainerConfigurator $container) {
                 abstract_arg('path to css output directory'),
                 service('sass.builder'),
             ])
+
         ->set('sass.public_asset_path_resolver', SassPublicPathAssetPathResolver::class)
         ->decorate('asset_mapper.public_assets_path_resolver')
         ->args([
             service('.inner')
         ])
+
+        ->set('sass.listener.pre_assets_compile', PreAssetsCompileEventListener::class)
+        ->tag('kernel.event_listener', [
+            'event' => PreAssetsCompileEvent::class,
+            'method' => '__invoke'
+        ])
+    ;
     ;
 };
