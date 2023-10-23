@@ -16,7 +16,9 @@ use Symfonycasts\SassBundle\SassBuilder;
 
 class PreAssetsCompileEventListener
 {
-    public function __construct(private readonly SassBuilder $sassBuilder) {}
+    public function __construct(private readonly SassBuilder $sassBuilder)
+    {
+    }
 
     public function __invoke(PreAssetsCompileEvent $preAssetsCompileEvent): void
     {
