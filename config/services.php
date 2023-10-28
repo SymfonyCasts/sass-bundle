@@ -2,6 +2,7 @@
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfonycasts\SassBundle\Command\SassBuildCommand;
+use Symfonycasts\SassBundle\Command\SassWatchCommand;
 use Symfonycasts\SassBundle\SassBuilder;
 use Symfonycasts\SassBundle\AssetMapper\SassCssCompiler;
 use Symfonycasts\SassBundle\AssetMapper\SassPublicPathAssetPathResolver;
@@ -21,6 +22,11 @@ return static function (ContainerConfigurator $container) {
             ])
 
         ->set('sass.command.build', SassBuildCommand::class)
+            ->args([
+                service('sass.builder')
+            ])
+            ->tag('console.command')
+        ->set('sass.command.watch', SassWatchCommand::class)
             ->args([
                 service('sass.builder')
             ])

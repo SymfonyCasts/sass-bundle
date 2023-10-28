@@ -47,7 +47,18 @@ Then run the command:
 
 .. code-block:: terminal
 
+    $ php bin/console sass:build
+
+You can watch your assets for changes and automatically build your stylesheets:
+
+.. code-block:: terminal
+
+    # With the --watch option...
     $ php bin/console sass:build --watch
+
+    # ...or the sass:watch command
+    $ php bin/console sass:watch
+
 
 And that's it!
 
