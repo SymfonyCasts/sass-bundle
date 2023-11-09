@@ -71,12 +71,12 @@ class SassBuilder
     public function getScssCssTargets(): array
     {
         $targets = [];
-        foreach ($this->sassPaths as $sassPath) {
+        foreach ($this->sassPaths as $fileName => $sassPath) {
             if (!is_file($sassPath)) {
                 throw new \Exception(sprintf('Could not find Sass file: "%s"', $sassPath));
             }
 
-            $targets[] = $sassPath.':'.$this->guessCssNameFromSassFile($sassPath, $this->cssPath);
+            $targets[] = $sassPath.':'. self::guessCssNameFromSassFile($sassPath, $fileName, $this->cssPath);
         }
 
         return $targets;
@@ -90,9 +90,11 @@ class SassBuilder
     /**
      * @internal
      */
-    public static function guessCssNameFromSassFile(string $sassFile, string $outputDirectory): string
+    public static function guessCssNameFromSassFile(string $sassFile, string|int $fileName, string $outputDirectory): string
     {
-        $fileName = basename($sassFile, '.scss');
+        if (is_int($fileName)) {
+            $fileName = basename($sassFile, '.scss');
+        }
 
         return $outputDirectory.'/'.$fileName.'.output.css';
     }
