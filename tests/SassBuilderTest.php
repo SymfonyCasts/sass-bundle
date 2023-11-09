@@ -49,7 +49,7 @@ class SassBuilderTest extends TestCase
         $builder = new SassBuilder(
             [
                 'foo' => __DIR__.'/fixtures/assets/app.scss',
-                'bar' => __DIR__.'/fixtures/assets/admin/app.scss'
+                'bar' => __DIR__.'/fixtures/assets/admin/app.scss',
             ],
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
