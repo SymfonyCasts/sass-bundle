@@ -40,7 +40,7 @@ class SassCssCompiler implements AssetCompilerInterface
 
         $asset->addFileDependency($cssFile);
 
-        if (($content = file_get_contents($cssFile)) === false) {
+        if (!is_file($cssFile) || ($content = file_get_contents($cssFile)) === false) {
             throw new \RuntimeException('The file '.$cssFile.' doesn\'t exist, run php bin/console sass:build');
         }
 
