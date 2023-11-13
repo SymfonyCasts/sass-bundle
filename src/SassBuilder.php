@@ -76,7 +76,7 @@ class SassBuilder
                 throw new \Exception(sprintf('Could not find Sass file: "%s"', $sassPath));
             }
 
-            $targets[] = $sassPath.':'.self::guessCssNameFromSassFile($sassPath, $fileName, $this->cssPath);
+            $targets[] = $sassPath.':'.self::guessCssNameFromSassFile($sassPath, $this->cssPath, $fileName);
         }
 
         return $targets;
@@ -90,9 +90,9 @@ class SassBuilder
     /**
      * @internal
      */
-    public static function guessCssNameFromSassFile(string $sassFile, string|int $fileName, string $outputDirectory): string
+    public static function guessCssNameFromSassFile(string $sassFile, string $outputDirectory, string|int $fileName = null): string
     {
-        if (\is_int($fileName)) {
+        if (\is_null($fileName) || \is_int($fileName)) {
             $fileName = basename($sassFile, '.scss');
         }
 
