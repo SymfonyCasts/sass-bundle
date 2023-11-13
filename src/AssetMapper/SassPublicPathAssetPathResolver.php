@@ -30,6 +30,8 @@ class SassPublicPathAssetPathResolver implements PublicAssetsPathResolverInterfa
 
     public function getPublicFilesystemPath(): string
     {
+        trigger_deprecation('symfony/asset-mapper', '6.4', 'Calling "%s()" is deprecated, use "resolvePublicPath()" instead.', __METHOD__);
+
         $path = $this->decorator->getPublicFilesystemPath();
 
         if (str_contains($path, '.scss')) {
