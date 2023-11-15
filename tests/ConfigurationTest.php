@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the SymfonyCasts SassBundle package.
+ * Copyright (c) SymfonyCasts <https://symfonycasts.com/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfonycasts\SassBundle\Tests;
 
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
@@ -22,9 +29,9 @@ final class ConfigurationTest extends TestCase
         $this->assertConfigurationIsValid([
             'symfonycasts_sass' => [
                 'root_sass' => [
-                    '%kernel.project_dir%/assets/scss/app.scss'
-                ]
-            ]
+                    '%kernel.project_dir%/assets/scss/app.scss',
+                ],
+            ],
         ]);
     }
 
@@ -34,9 +41,9 @@ final class ConfigurationTest extends TestCase
             'symfonycasts_sass' => [
                 'root_sass' => [
                     '%kernel.project_dir%/assets/scss/app.scss',
-                    '%kernel.project_dir%/assets/admin/scss/admin.scss'
-                ]
-            ]
+                    '%kernel.project_dir%/assets/admin/scss/admin.scss',
+                ],
+            ],
         ]);
     }
 
@@ -46,10 +53,10 @@ final class ConfigurationTest extends TestCase
             'symfonycasts_sass' => [
                 'root_sass' => [
                     '%kernel.project_dir%/assets/scss/app.scss',
-                    '%kernel.project_dir%/assets/admin/scss/app.scss'
-                ]
-            ]
+                    '%kernel.project_dir%/assets/admin/scss/app.scss',
+                ],
+            ],
         ],
-        'Invalid configuration for path "symfonycasts_sass.root_sass": The root sass-paths need to end with unique filenames.');
+            'Invalid configuration for path "symfonycasts_sass.root_sass": The root sass-paths need to end with unique filenames.');
     }
 }
