@@ -17,6 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
+use function basename;
+use function in_array;
+
 class SymfonycastsSassExtension extends Extension implements ConfigurationInterface
 {
     public function load(array $configs, ContainerBuilder $container): void
@@ -58,6 +61,22 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                     ->info('Path to your Sass root file')
                     ->cannotBeEmpty()
                     ->scalarPrototype()
+                        ->end()
+                    ->validate()
+                        ->ifTrue(static function (array $paths): bool {
+                            if (count($paths) === 1) {
+                                return false;
+                            }
+
+                            $filenames = [];
+                            foreach ($paths as $path) {
+                                $filename = basename($path, '.scss');
+                                $filenames[$filename] = $filename;
+                            }
+
+                            return count($filenames) !== count($paths);
+                        })
+                        ->thenInvalid('The root sass-paths need to end with unique filenames.')
                         ->end()
                     ->defaultValue(['%kernel.project_dir%/assets/styles/app.scss'])
                 ->end()
