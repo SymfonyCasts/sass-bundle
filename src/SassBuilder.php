@@ -92,7 +92,7 @@ class SassBuilder
      */
     public static function guessCssNameFromSassFile(string $sassFile, string $outputDirectory, string|int $fileName = null): string
     {
-        if (\is_null($fileName) || \is_int($fileName)) {
+        if (null === $fileName || \is_int($fileName)) {
             $fileName = basename($sassFile, '.scss');
         }
 
