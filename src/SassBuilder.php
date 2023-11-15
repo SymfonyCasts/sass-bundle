@@ -99,6 +99,24 @@ class SassBuilder
         return $outputDirectory.'/'.$fileName.'.output.css';
     }
 
+    public function getIdentifierByLogicalPath(string $path): ?string
+    {
+        if (array_is_list($this->sassPaths)) {
+            return null;
+        }
+
+        foreach ($this->sassPaths as $identifier => $configuredSassPath) {
+            // as the configured paths include the project dir, we need to subtract it to be able to compare the paths
+            $logicalPath = str_replace($this->projectRootDir.'/assets/', '', $configuredSassPath);
+
+            if ($path === $logicalPath) {
+                return $identifier;
+            }
+        }
+
+        return null;
+    }
+
     private function createBinary(): SassBinary
     {
         return new SassBinary($this->projectRootDir.'/var', $this->binaryPath, $this->output);

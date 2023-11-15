@@ -36,7 +36,9 @@ class SassCssCompiler implements AssetCompilerInterface
 
     public function compile(string $content, MappedAsset $asset, AssetMapperInterface $assetMapper): string
     {
-        $cssFile = $this->sassBuilder->guessCssNameFromSassFile($asset->sourcePath, $this->cssPathDirectory);
+        $fileName = $this->sassBuilder->getIdentifierByLogicalPath($asset->logicalPath);
+
+        $cssFile = SassBuilder::guessCssNameFromSassFile($asset->sourcePath, $this->cssPathDirectory, $fileName);
 
         $asset->addFileDependency($cssFile);
 
