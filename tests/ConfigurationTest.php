@@ -57,6 +57,6 @@ final class ConfigurationTest extends TestCase
                 ],
             ],
         ],
-            'Invalid configuration for path "symfonycasts_sass.root_sass": The root sass-paths need to end with unique filenames.');
+            'Invalid configuration for path "symfonycasts_sass.root_sass": The "root_sass" paths need to end with unique filenames.');
     }
 }

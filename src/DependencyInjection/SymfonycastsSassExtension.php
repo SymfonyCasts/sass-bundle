@@ -73,7 +73,7 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
 
                             return \count($filenames) !== \count($paths);
                         })
-                        ->thenInvalid('The root sass-paths need to end with unique filenames.')
+                        ->thenInvalid('The "root_sass" paths need to end with unique filenames.')
                         ->end()
                     ->defaultValue(['%kernel.project_dir%/assets/styles/app.scss'])
                 ->end()
