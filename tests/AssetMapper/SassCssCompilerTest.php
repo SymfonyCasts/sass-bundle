@@ -48,7 +48,7 @@ final class SassCssCompilerTest extends TestCase
             'app.css'
         );
 
-        \file_put_contents($cssFile, <<<EOF
+        file_put_contents($cssFile, <<<EOF
             p {
                color: red;
             }
@@ -87,7 +87,7 @@ final class SassCssCompilerTest extends TestCase
             'admin.css'
         );
 
-        \file_put_contents($cssFile, <<<EOF
+        file_put_contents($cssFile, <<<EOF
             p {
                color: blue;
             }
