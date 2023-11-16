@@ -24,7 +24,7 @@ final class SassCssCompilerTest extends TestCase
     protected function setUp(): void
     {
         if (!is_dir(self::CSS_DIR)) {
-            mkdir(self::CSS_DIR);
+            mkdir(self::CSS_DIR, 0777, true);
         }
     }
 
