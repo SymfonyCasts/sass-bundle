@@ -22,14 +22,18 @@ class PreAssetsCompileEventListener
 
     public function __invoke(PreAssetsCompileEvent $preAssetsCompileEvent): void
     {
-        $this->sassBuilder->setOutput(
-            new SymfonyStyle(
-                new ArrayInput([]),
-                $preAssetsCompileEvent->getOutput()
-            )
+        $io = new SymfonyStyle(
+            new ArrayInput([]),
+            $preAssetsCompileEvent->getOutput()
         );
 
+        $this->sassBuilder->setOutput($io);
+
         $process = $this->sassBuilder->runBuild(false);
+
+        $process->wait(function ($type, $buffer) use ($io) {
+            $io->write($buffer);
+        });
 
         if ($process->isSuccessful()) {
             return;

@@ -45,6 +45,9 @@ return static function (ContainerConfigurator $container) {
         ])
 
         ->set('sass.listener.pre_assets_compile', PreAssetsCompileEventListener::class)
+        ->args([
+            service('sass.builder')
+        ])
         ->tag('kernel.event_listener', [
             'event' => PreAssetsCompileEvent::class,
             'method' => '__invoke'
