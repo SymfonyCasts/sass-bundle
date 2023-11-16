@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the SymfonyCasts SassBundle package.
+ * Copyright (c) SymfonyCasts <https://symfonycasts.com/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfonycasts\SassBundle\Tests\AssetMapper;
 
 use PHPUnit\Framework\TestCase;
@@ -10,13 +17,11 @@ use Symfony\Component\AssetMapper\MappedAsset;
 use Symfonycasts\SassBundle\AssetMapper\SassCssCompiler;
 use Symfonycasts\SassBundle\SassBuilder;
 
-use function file_put_contents;
-
 final class SassCssCompilerTest extends TestCase
 {
     private const CSS_DIR = __DIR__.'/../fixtures/var/sass';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         if (!is_dir(self::CSS_DIR)) {
             mkdir(self::CSS_DIR);
@@ -27,7 +32,7 @@ final class SassCssCompilerTest extends TestCase
     {
         $scssFile = __DIR__.'/../fixtures/assets/app.scss';
         $scssPaths = [
-            $scssFile
+            $scssFile,
         ];
         $cssFile = self::CSS_DIR.'/app.output.css';
 
@@ -43,7 +48,7 @@ final class SassCssCompilerTest extends TestCase
             'app.css'
         );
 
-        file_put_contents($cssFile, <<<EOF
+        \file_put_contents($cssFile, <<<EOF
             p {
                color: red;
             }
@@ -66,7 +71,7 @@ final class SassCssCompilerTest extends TestCase
     {
         $scssFile = __DIR__.'/../fixtures/assets/admin/app.scss';
         $scssPaths = [
-            'admin' => $scssFile
+            'admin' => $scssFile,
         ];
         $cssFile = self::CSS_DIR.'/admin.output.css';
 
@@ -82,7 +87,7 @@ final class SassCssCompilerTest extends TestCase
             'admin.css'
         );
 
-        file_put_contents($cssFile, <<<EOF
+        \file_put_contents($cssFile, <<<EOF
             p {
                color: blue;
             }
