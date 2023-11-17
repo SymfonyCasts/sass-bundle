@@ -61,7 +61,7 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                         ->end()
                     ->validate()
                         ->ifTrue(static function (array $paths): bool {
-                            if (1 === \count($paths)) {
+                            if (1 === \count($paths) || !array_is_list($paths)) {
                                 return false;
                             }
 

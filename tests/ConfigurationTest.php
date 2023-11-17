@@ -47,6 +47,18 @@ final class ConfigurationTest extends TestCase
         ]);
     }
 
+    public function testMultipleSassRootPathsWithIdentifier(): void
+    {
+        $this->assertConfigurationIsValid([
+            'symfonycasts_sass' => [
+                'root_sass' => [
+                    'website' => '%kernel.project_dir%/assets/scss/app.scss',
+                    'admin' => '%kernel.project_dir%/assets/admin/scss/app.scss',
+                ],
+            ],
+        ]);
+    }
+
     public function testMultipleSassRootPathsWithSameFilename(): void
     {
         $this->assertConfigurationIsInvalid([
