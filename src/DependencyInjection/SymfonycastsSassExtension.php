@@ -59,6 +59,22 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                     ->cannotBeEmpty()
                     ->scalarPrototype()
                         ->end()
+                    ->validate()
+                        ->ifTrue(static function (array $paths): bool {
+                            if (1 === \count($paths)) {
+                                return false;
+                            }
+
+                            $filenames = [];
+                            foreach ($paths as $path) {
+                                $filename = basename($path, '.scss');
+                                $filenames[$filename] = $filename;
+                            }
+
+                            return \count($filenames) !== \count($paths);
+                        })
+                        ->thenInvalid('The "root_sass" paths need to end with unique filenames.')
+                        ->end()
                     ->defaultValue(['%kernel.project_dir%/assets/styles/app.scss'])
                 ->end()
                 ->scalarNode('binary')
