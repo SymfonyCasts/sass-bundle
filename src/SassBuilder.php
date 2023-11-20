@@ -25,6 +25,7 @@ class SassBuilder
         '--style' => 'expanded',                // Output style.  [expanded (default), compressed]
         '--[no-]charset' => null,               // Emit a @charset or BOM for CSS with non-ASCII characters.
         '--[no-]error-css' => null,             // Emit a CSS file when an error occurs.
+        '--load-path' => null,                  // Additional load paths
         // Source Maps
         '--[no-]source-map' => true,            // Whether to generate source maps. (defaults to on)
         '--[no-]embed-sources' => null,         // Embed source file contents in source maps.
@@ -123,7 +124,7 @@ class SassBuilder
     }
 
     /**
-     * @param array<string, bool|string> $options
+     * @param array<string, bool|array|string> $options
      *
      * @return list<string>
      */
@@ -145,6 +146,13 @@ class SassBuilder
             // --style=compressed
             if (\is_string($value)) {
                 $buildOptions[] = $option.'='.$value;
+                continue;
+            }
+            // --load-path
+            if (\is_array($value)) {
+                foreach ($value as $item) {
+                    $buildOptions[] = $option.'='.$item;
+                }
                 continue;
             }
             // --update
@@ -182,7 +190,7 @@ class SassBuilder
      *
      * Options are converted from PHP option names to CLI option names.
      *
-     * @param array<string, bool|string> $options
+     * @param array<string, bool|array|string> $options
      *
      * @see getOptionMap()
      */

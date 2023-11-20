@@ -205,6 +205,9 @@ You can configure most of the `Dart Sass CLI options <https://sass-lang.com/docu
             # Emit a @charset or BOM for CSS with non-ASCII characters. Defaults to true in Dart Sass.
             # charset: true
 
+            # Register additional load paths. Defaults to empty array.
+            # load_path: []
+
             # Wether to generate source maps. Defaults to true when "kernel.debug" is true.
             # source_map: true
 
@@ -236,3 +239,24 @@ This bundle already installed for you the right binary. However, if you already 
 
     symfonycasts_sass:
         binary: 'node_modules/.bin/sass'
+
+Register additional load paths
+-------------------------------
+
+You can provide additional `load paths <https://sass-lang.com/documentation/at-rules/use/#load-paths>`_ to resolve modules with the ``load_path`` option.
+
+For example, an alternative way to use Bootstrap would be to register the vendor path:
+
+.. code-block:: yaml
+
+    # config/packages/symfonycasts_sass.yaml
+    symfonycasts_sass:
+        sass_options:
+            load_path:
+                - '%kernel.project_dir%/vendor/bootstrap/scss'
+
+And then import bootstrap from ``app.scss`` with:
+
+.. code-block:: scss
+
+    @import 'bootstrap';
