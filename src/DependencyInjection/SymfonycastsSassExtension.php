@@ -32,6 +32,7 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
             ->replaceArgument(1, '%kernel.project_dir%/var/sass')
             ->replaceArgument(3, $config['binary'])
             ->replaceArgument(4, $config['embed_sourcemap'])
+            ->replaceArgument(5, $config['load_paths'])
         ;
 
         $container->findDefinition('sass.css_asset_compiler')
@@ -53,6 +54,7 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
         \assert($rootNode instanceof ArrayNodeDefinition);
 
         $rootNode
+            ->fixXmlConfig('load_path')
             ->children()
                 ->arrayNode('root_sass')
                     ->info('Path to your Sass root file')
@@ -76,6 +78,11 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                         ->thenInvalid('The "root_sass" paths need to end with unique filenames.')
                         ->end()
                     ->defaultValue(['%kernel.project_dir%/assets/styles/app.scss'])
+                ->end()
+                ->arrayNode('load_paths')
+                    ->info('Additional load paths')
+                    ->scalarPrototype()
+                        ->end()
                 ->end()
                 ->scalarNode('binary')
                     ->info('The Sass binary to use')

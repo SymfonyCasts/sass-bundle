@@ -14,10 +14,14 @@ use Symfonycasts\SassBundle\SassBuilder;
 
 class SassBuilderTest extends TestCase
 {
+    private array $outputFiles = [];
+
     protected function tearDown(): void
     {
-        unlink(__DIR__.'/fixtures/assets/app.output.css');
-        unlink(__DIR__.'/fixtures/assets/app.output.css.map');
+        while ($path = array_shift($this->outputFiles)) {
+            unlink($path);
+            unlink(sprintf('%s.map', $path));
+        }
     }
 
     public function testIntegration(): void
@@ -27,7 +31,8 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
-            false
+            false,
+            []
         );
 
         $process = $builder->runBuild(false);
@@ -35,6 +40,27 @@ class SassBuilderTest extends TestCase
 
         $this->assertTrue($process->isSuccessful());
         $this->assertFileExists(__DIR__.'/fixtures/assets/app.output.css');
+        $this->outputFiles[] = __DIR__.'/fixtures/assets/app.output.css';
         $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/app.output.css'));
+    }
+
+    public function testIntegrationWithLoadPaths(): void
+    {
+        $builder = new SassBuilder(
+            [__DIR__.'/fixtures/assets/app_using_external.scss'],
+            __DIR__.'/fixtures/assets',
+            __DIR__.'/fixtures',
+            null,
+            false,
+            [__DIR__.'/fixtures/external']
+        );
+
+        $process = $builder->runBuild(false);
+        $process->wait();
+
+        $this->assertTrue($process->isSuccessful());
+        $this->assertFileExists(__DIR__.'/fixtures/assets/app_using_external.output.css');
+        $this->outputFiles[] = __DIR__.'/fixtures/assets/app_using_external.output.css';
+        $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/app_using_external.output.css'));
     }
 }

@@ -151,3 +151,23 @@ This bundle already installed for you the right binary. However, if you already 
 
     symfonycasts_sass:
         binary: 'node_modules/.bin/sass'
+
+Register additional load paths
+-------------------------------
+
+You can provide additional `load paths <https://sass-lang.com/documentation/at-rules/use/#load-paths>`_ to resolve modules with the ``load_paths`` option.
+
+For example, an alternative way to use Bootstrap would be to register the vendor path:
+
+.. code-block:: yaml
+
+    # config/packages/symfonycasts_sass.yaml
+    symfonycasts_sass:
+        load_paths:
+            - '%kernel.project_dir%/vendor/bootstrap/scss'
+
+And then import bootstrap from ``app.scss`` with:
+
+.. code-block:: scss
+
+    @import 'bootstrap';
