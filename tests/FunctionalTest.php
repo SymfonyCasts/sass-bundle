@@ -45,6 +45,12 @@ class FunctionalTest extends KernelTestCase
 
         $asset = $assetMapper->getAsset('app.css');
         $this->assertInstanceOf(MappedAsset::class, $asset);
-        $this->assertStringContainsString('color: red', $asset->content);
+
+        if (null === $asset->content) {
+            // Starting with Symfony 6.4, the asset mapper only store the content during compilation.
+            $this->assertStringContainsString('color: red', file_get_contents($asset->sourcePath));
+        } else {
+            $this->assertStringContainsString('color: red', $asset->content);
+        }
     }
 }
