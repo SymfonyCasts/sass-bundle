@@ -27,11 +27,17 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
+        $sassOptions = array_combine(
+            array_map(static fn (string $key): string => str_replace('_', '-', $key), array_keys($config['sass_options'])),
+            array_values($config['sass_options'])
+        );
+
         $container->findDefinition('sass.builder')
             ->replaceArgument(0, $config['root_sass'])
             ->replaceArgument(1, '%kernel.project_dir%/var/sass')
             ->replaceArgument(3, $config['binary'])
             ->replaceArgument(4, $config['embed_sourcemap'])
+            ->replaceArgument(5, $sassOptions)
         ;
 
         $container->findDefinition('sass.css_asset_compiler')
@@ -80,11 +86,39 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                 ->scalarNode('binary')
                     ->info('The Sass binary to use')
                     ->defaultNull()
+                ->end()
+                ->arrayNode('sass_options')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('charset')
+                            ->info('Whether to include the charset declaration in the generated Sass. (default: true)')
+                            ->defaultValue(true)
+                        ->end()
+                        ->enumNode('style')
+                            ->info('The style of the generated CSS: compressed or expanded (default: expanded)')
+                            ->values(['compressed', 'expanded'])
+                            ->defaultValue('expanded')
+                        ->end()
+                        ->booleanNode('source_map')
+                            ->info('Generate a source map file (default: true)')
+                            ->defaultValue(true)
+                        ->end()
+                        ->scalarNode('embed_source_map')
+                            ->info('Embed the sourcemap in the compiled CSS. By default, enabled only when debug mode is on.')
+                            ->defaultValue('%kernel.debug%')
+                        ->end()
+                        ->booleanNode('embed_sources')
+                            ->info('Embed the content of the Sass sources in the generated source map (default: false).')
+                            ->defaultValue(false)
+                        ->end()
                     ->end()
+                    ->ignoreExtraKeys()
+                ->end()
                 ->scalarNode('embed_sourcemap')
-                    ->info('Whether to embed the sourcemap in the compiled CSS. By default, enabled only when debug mode is on.')
+                    ->setDeprecated('symfonycast/sass-bundle', '0.3', 'Option "%node%" at "%path%" is deprecated. Use sass_options.embed_source_map.')
+                    ->info('Embed the sourcemap in the compiled CSS. By default, enabled only when debug mode is on.')
                     ->defaultValue('%kernel.debug%')
-                    ->end()
+                ->end()
             ->end()
         ;
 

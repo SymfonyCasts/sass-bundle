@@ -35,6 +35,27 @@ final class ConfigurationTest extends TestCase
         ]);
     }
 
+    public function testSassOptionsEmpty(): void
+    {
+        $this->assertConfigurationIsValid([
+            'symfonycasts_sass' => [
+                'sass_options' => [
+                ],
+            ],
+        ]);
+    }
+
+    public function testSassOptionsWithInvalidStyle(): void
+    {
+        $this->assertConfigurationIsInvalid([
+            'symfonycasts_sass' => [
+                'sass_options' => [
+                    'style' => 'not-a-valid-style',
+                ],
+            ],
+        ]);
+    }
+
     public function testMultipleSassRootPaths(): void
     {
         $this->assertConfigurationIsValid([

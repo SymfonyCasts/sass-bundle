@@ -53,6 +53,9 @@ class SassTestKernel extends Kernel
         $container->loadFromExtension('symfonycasts_sass', [
             'root_sass' => [__DIR__.'/assets/styles/app.scss'],
             'binary' => null,
+            'sass_options' => [
+                'style' => 'compressed',
+            ],
         ]);
     }
 

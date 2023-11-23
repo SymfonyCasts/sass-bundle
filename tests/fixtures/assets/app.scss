@@ -1,5 +1,16 @@
+/** Test charset 👭 */
+
 $color: red;
 
 p {
+  /** Test variable */
   color: $color;
+}
+
+ul {
+
+    li {
+      /** Test Compression */
+        color: $color;
+    }
 }
