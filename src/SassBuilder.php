@@ -107,7 +107,8 @@ class SassBuilder
 
         foreach ($this->sassPaths as $identifier => $configuredSassPath) {
             // as the configured paths include the project dir, we need to subtract it to be able to compare the paths
-            $logicalPath = str_replace($this->projectRootDir.'/assets/', '', $configuredSassPath);
+            $pathPrefix = $this->projectRootDir.'/assets/';
+            $logicalPath = substr($configuredSassPath, \strlen($pathPrefix));
 
             if ($path === $logicalPath) {
                 return $identifier;
