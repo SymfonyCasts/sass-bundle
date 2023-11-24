@@ -39,7 +39,7 @@ final class SassCssCompilerTest extends TestCase
         $compiler = new SassCssCompiler(
             $scssPaths,
             self::CSS_DIR,
-            $this->createSassBuilder($scssPaths, self::CSS_DIR)
+            $this->createSassBuilder($scssPaths)
         );
 
         $mappedAsset = new MappedAsset(
@@ -70,6 +70,7 @@ final class SassCssCompilerTest extends TestCase
     public function testCompileNamedSassPath()
     {
         $scssFile = __DIR__.'/../fixtures/assets/admin/app.scss';
+
         $scssPaths = [
             'admin' => $scssFile,
         ];
@@ -78,7 +79,7 @@ final class SassCssCompilerTest extends TestCase
         $compiler = new SassCssCompiler(
             $scssPaths,
             self::CSS_DIR,
-            $this->createSassBuilder($scssPaths, self::CSS_DIR)
+            $this->createSassBuilder($scssPaths)
         );
 
         $mappedAsset = new MappedAsset(
@@ -106,11 +107,11 @@ final class SassCssCompilerTest extends TestCase
         );
     }
 
-    private function createSassBuilder(array $sassPaths, string $cssPath): SassBuilder
+    private function createSassBuilder(array $sassPaths): SassBuilder
     {
         return new SassBuilder(
             $sassPaths,
-            $cssPath,
+            self::CSS_DIR,
             __DIR__.'/../fixtures',
             null,
             false
