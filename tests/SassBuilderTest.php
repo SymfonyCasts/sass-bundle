@@ -18,7 +18,7 @@ class SassBuilderTest extends TestCase
     {
         unlink(__DIR__.'/fixtures/assets/app.output.css');
         if (file_exists($sourceMap = __DIR__.'/fixtures/assets/app.output.css.map')) {
-            unlink(__DIR__.'/fixtures/assets/app.output.css.map');
+            unlink($sourceMap);
         }
     }
 
@@ -47,11 +47,6 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
-            true,
-            [
-                'charset' => true,
-                // 'embed-source-map' => true,
-            ]
         );
 
         $process = $builder->runBuild(false);
@@ -68,32 +63,55 @@ class SassBuilderTest extends TestCase
         $this->assertStringContainsString('sourceMappingURL=', $result);
     }
 
-    public function testSassOptionsProd(): void
+    public function testEmbedSources(): void
     {
         $builder = new SassBuilder(
             [__DIR__.'/fixtures/assets/app.scss'],
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
-            false,
             [
-                'style' => 'compressed',
-                'charset' => false,
-                'source-map' => false,
+                'embed_sources' => true,
+                'embed_source_map' => true,
             ]
         );
 
         $process = $builder->runBuild(false);
         $process->wait();
 
-        $this->assertTrue($process->isSuccessful());
+        $this->assertTrue($process->isSuccessful(), $process->getOutput());
+        $this->assertFileExists(__DIR__.'/fixtures/assets/app.output.css');
+
+        $result = file_get_contents(__DIR__.'/fixtures/assets/app.output.css');
+
+        $this->assertStringContainsString('sourceMappingURL=data:application/json', $result);
+        $this->assertStringContainsString('color: red', $result);
+        $this->assertStringContainsString('color:%20$color;', $result);
+    }
+
+    public function testSassOptions(): void
+    {
+        $builder = new SassBuilder(
+            [__DIR__.'/fixtures/assets/app.scss'],
+            __DIR__.'/fixtures/assets',
+            __DIR__.'/fixtures',
+            null,
+            [
+                'style' => 'compressed',
+                'source_map' => false,
+            ]
+        );
+
+        $process = $builder->runBuild(false);
+        $process->wait();
+
+        $this->assertTrue($process->isSuccessful(), $process->getExitCodeText());
         $this->assertFileExists(__DIR__.'/fixtures/assets/app.output.css');
 
         $result = file_get_contents(__DIR__.'/fixtures/assets/app.output.css');
 
         $this->assertStringNotContainsString('/** FOO BAR */', $result);
         $this->assertStringContainsString('}ul li{color:red}', $result);
-        $this->assertStringNotContainsString('charset=', $result);
         $this->assertStringNotContainsString('sourceMappingURL=', $result);
     }
 }

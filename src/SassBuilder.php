@@ -18,34 +18,61 @@ class SassBuilder
     private ?SymfonyStyle $output = null;
 
     /**
-     * @param array<string> $sassPaths
+     * @var array<string, bool|string>
+     */
+    private readonly array $sassOptions;
+
+    /**
+     * @see https://sass-lang.com/documentation/cli/dart-sass/
+     */
+    private const DEFAULT_OPTIONS = [
+        'charset' => true,
+        'style' => 'expanded',
+        'source_map' => true,
+        'embed_source_map' => false,
+        'embed_sources' => false,
+    ];
+
+    /**
+     * @param array<string>              $sassPaths
+     * @param array<string, bool|string> $sassOptions
      */
     public function __construct(
         private readonly array $sassPaths,
         private readonly string $cssPath,
         private readonly string $projectRootDir,
         private readonly ?string $binaryPath,
-        private readonly bool $embedSourcemap,
-        private readonly ?array $sassOptions = [],
+        bool|array $sassOptions = [],
     ) {
+        if (\is_bool($sassOptions)) {
+            // Until 0.3, the $sassOptions argument was a boolean named $embedSourceMap
+            trigger_deprecation('symfonycasts/sass-bundle', '0.3', 'Passing a boolean to embed the source map is deprecated. Use [\'embed_source_map\' => true] instead.');
+            $sassOptions = ['embed_source_map' => $sassOptions];
+            // ...and source maps were always generated.
+            $sassOptions['source_map'] = true;
+        }
+
+        $this->sassOptions = $this->configureOptions($sassOptions);
     }
 
     public function runBuild(bool $watch): Process
     {
         $binary = $this->createBinary();
 
-        $options = new SassOptions($this->sassOptions);
-        if ($this->embedSourcemap) {
-            $options->embedSourceMap();
-        }
-
+        $args = $this->getScssCssTargets();
         if ($watch) {
             $args[] = '--watch';
         }
+        foreach ($this->sassOptions as $option => $value) {
+            $option = str_replace('_', '-', $option);
+            if (\is_bool($value)) {
+                $args[] = $value ? '--'.$option : '--no-'.$option;
+                continue;
+            }
+            $args[] = '--'.$option.'='.$value;
+        }
 
-        $args = $this->getScssCssTargets();
-
-        $process = $binary->createProcess([...$options->toArray(), ...$args]);
+        $process = $binary->createProcess($args);
 
         if ($watch) {
             $process->setTimeout(null);
@@ -60,6 +87,7 @@ class SassBuilder
                 '  Command:',
                 '    '.$process->getCommandLine(),
             ]);
+            dump($process->getCommandLine());
         }
 
         $process->start();
@@ -97,6 +125,17 @@ class SassBuilder
         $fileName = basename($sassFile, '.scss');
 
         return $outputDirectory.'/'.$fileName.'.output.css';
+    }
+
+    private function configureOptions(array $options = []): array
+    {
+        $validOptions = array_keys(self::DEFAULT_OPTIONS);
+        $invalidOptions = array_diff(array_keys($options), $validOptions);
+        if (\count($invalidOptions) > 0) {
+            throw new \InvalidArgumentException(sprintf('Invalid Sass options: "%s". Valid options are: "%s".', implode('", "', $invalidOptions), implode('", "', $validOptions)));
+        }
+
+        return array_diff_assoc($options, self::DEFAULT_OPTIONS);
     }
 
     private function createBinary(): SassBinary
