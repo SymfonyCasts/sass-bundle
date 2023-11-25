@@ -87,7 +87,6 @@ class SassBuilder
                 '  Command:',
                 '    '.$process->getCommandLine(),
             ]);
-            dump($process->getCommandLine());
         }
 
         $process->start();
