@@ -112,7 +112,7 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                     ->end()
                 ->end()
                 ->booleanNode('embed_sourcemap')
-                    ->setDeprecated('symfonycast/sass-bundle', '0.3', 'Option "%node%" at "%path%" is deprecated. Use "sass_options.embed_source_map" instead".')
+                    ->setDeprecated('symfonycast/sass-bundle', '0.4', 'Option "%node%" at "%path%" is deprecated. Use "sass_options.embed_source_map" instead".')
                     ->defaultNull()
                 ->end()
             ->end()

@@ -46,7 +46,7 @@ class SassBuilder
     ) {
         if (\is_bool($sassOptions)) {
             // Until 0.3, the $sassOptions argument was a boolean named $embedSourceMap
-            trigger_deprecation('symfonycasts/sass-bundle', '0.3', 'Passing a boolean to embed the source map is deprecated. Use [\'embed_source_map\' => true] instead.');
+            trigger_deprecation('symfonycasts/sass-bundle', '0.4', 'Passing a boolean to embed the source map is deprecated. Set \'sass_options.embed_source_map\' instead.');
             $sassOptions = ['embed_source_map' => $sassOptions];
             // ...and source maps were always generated.
             $sassOptions['source_map'] = true;
