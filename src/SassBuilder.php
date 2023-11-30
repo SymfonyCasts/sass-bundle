@@ -71,12 +71,12 @@ class SassBuilder
     public function getScssCssTargets(): array
     {
         $targets = [];
-        foreach ($this->sassPaths as $sassPath) {
+        foreach ($this->sassPaths as $fileName => $sassPath) {
             if (!is_file($sassPath)) {
                 throw new \Exception(sprintf('Could not find Sass file: "%s"', $sassPath));
             }
 
-            $targets[] = $sassPath.':'.$this->guessCssNameFromSassFile($sassPath, $this->cssPath);
+            $targets[] = $sassPath.':'.self::guessCssNameFromSassFile($sassPath, $this->cssPath, $fileName);
         }
 
         return $targets;
@@ -90,11 +90,32 @@ class SassBuilder
     /**
      * @internal
      */
-    public static function guessCssNameFromSassFile(string $sassFile, string $outputDirectory): string
+    public static function guessCssNameFromSassFile(string $sassFile, string $outputDirectory, string|int $fileName = null): string
     {
-        $fileName = basename($sassFile, '.scss');
+        if (null === $fileName || \is_int($fileName)) {
+            $fileName = basename($sassFile, '.scss');
+        }
 
         return $outputDirectory.'/'.$fileName.'.output.css';
+    }
+
+    public function getIdentifierByLogicalPath(string $path): ?string
+    {
+        if (array_is_list($this->sassPaths)) {
+            return null;
+        }
+
+        foreach ($this->sassPaths as $identifier => $configuredSassPath) {
+            // as the configured paths include the project dir, we need to subtract it to be able to compare the paths
+            $pathPrefix = $this->projectRootDir.'/assets/';
+            $logicalPath = substr($configuredSassPath, \strlen($pathPrefix));
+
+            if ($path === $logicalPath) {
+                return $identifier;
+            }
+        }
+
+        return null;
     }
 
     private function createBinary(): SassBinary

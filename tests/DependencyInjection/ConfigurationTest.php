@@ -9,7 +9,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Symfonycasts\SassBundle\Tests;
+namespace Symfonycasts\SassBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use PHPUnit\Framework\TestCase;
@@ -42,6 +42,18 @@ final class ConfigurationTest extends TestCase
                 'root_sass' => [
                     '%kernel.project_dir%/assets/scss/app.scss',
                     '%kernel.project_dir%/assets/admin/scss/admin.scss',
+                ],
+            ],
+        ]);
+    }
+
+    public function testMultipleSassRootPathsWithIdentifier(): void
+    {
+        $this->assertConfigurationIsValid([
+            'symfonycasts_sass' => [
+                'root_sass' => [
+                    'website' => '%kernel.project_dir%/assets/scss/app.scss',
+                    'admin' => '%kernel.project_dir%/assets/admin/scss/app.scss',
                 ],
             ],
         ]);
