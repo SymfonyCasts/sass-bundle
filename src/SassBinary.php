@@ -16,16 +16,18 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SassBinary
 {
-    private const VERSION = '1.63.6';
+    private const DEFAULT_VERSION = '1.63.6';
     private HttpClientInterface $httpClient;
 
     public function __construct(
         private string $binaryDownloadDir,
         private ?string $binaryPath = null,
+        private ?string $binaryVersion = null,
         private ?SymfonyStyle $output = null,
         HttpClientInterface $httpClient = null
     ) {
         $this->httpClient = $httpClient ?? HttpClient::create();
+        $this->binaryVersion ??= self::DEFAULT_VERSION;
     }
 
     /**
@@ -49,7 +51,7 @@ class SassBinary
 
     public function downloadExecutable(): void
     {
-        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s', self::VERSION, $this->getBinaryName());
+        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s', $this->binaryVersion, $this->getBinaryName());
         $isZip = str_ends_with($url, '.zip');
 
         $this->output?->note('Downloading Sass binary from '.$url);
@@ -74,6 +76,13 @@ class SassBinary
                 $progressBar?->setProgress($dlNow);
             },
         ]);
+
+        if (404 === $response->getStatusCode()) {
+            if (self::DEFAULT_VERSION !== $this->binaryVersion) {
+                throw new \Exception(sprintf('Cannot download sass binary. Please verify version `%s` exists for your machine.', $this->binaryVersion));
+            }
+            throw new \Exception(sprintf('Cannot download sass binary. Response code: %d', $response->getStatusCode()));
+        }
 
         $fileHandler = fopen($targetPath, 'w');
         foreach ($this->httpClient->stream($response) as $chunk) {
@@ -155,7 +164,7 @@ class SassBinary
 
     private function buildBinaryFileName(string $os, bool $isWindows = false): string
     {
-        return 'dart-sass-'.self::VERSION.'-'.$os.($isWindows ? '.zip' : '.tar.gz');
+        return 'dart-sass-'.$this->binaryVersion.'-'.$os.($isWindows ? '.zip' : '.tar.gz');
     }
 
     private function getDefaultBinaryPath(): string

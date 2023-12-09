@@ -19,6 +19,7 @@ return static function (ContainerConfigurator $container) {
                 abstract_arg('path to css directory'),
                 param('kernel.project_dir'),
                 abstract_arg('path to binary'),
+                abstract_arg('path to binary version'),
                 abstract_arg('embed sourcemap'),
             ])
 
