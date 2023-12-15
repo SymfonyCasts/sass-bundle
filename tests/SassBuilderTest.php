@@ -10,6 +10,7 @@
 namespace Symfonycasts\SassBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Symfonycasts\SassBundle\SassBinary;
 use Symfonycasts\SassBundle\SassBuilder;
 
 class SassBuilderTest extends TestCase
@@ -27,8 +28,8 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
-            null,
-            false
+            false,
+            SassBinary::DEFAULT_VERSION
         );
 
         $process = $builder->runBuild(false);

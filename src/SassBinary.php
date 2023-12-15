@@ -16,18 +16,17 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SassBinary
 {
-    private const DEFAULT_VERSION = '1.63.6';
+    public const DEFAULT_VERSION = '1.63.6';
     private HttpClientInterface $httpClient;
 
     public function __construct(
         private string $binaryDownloadDir,
         private ?string $binaryPath = null,
-        private ?string $binaryVersion = null,
+        private ?string $binaryVersion = self::DEFAULT_VERSION,
         private ?SymfonyStyle $output = null,
         HttpClientInterface $httpClient = null
     ) {
         $this->httpClient = $httpClient ?? HttpClient::create();
-        $this->binaryVersion ??= self::DEFAULT_VERSION;
     }
 
     /**
@@ -79,9 +78,9 @@ class SassBinary
 
         if (404 === $response->getStatusCode()) {
             if (self::DEFAULT_VERSION !== $this->binaryVersion) {
-                throw new \Exception(sprintf('Cannot download sass binary. Please verify version `%s` exists for your machine.', $this->binaryVersion));
+                throw new \Exception(sprintf('Cannot download Sass binary. Please verify version `%s` exists for your machine.', $this->binaryVersion));
             }
-            throw new \Exception(sprintf('Cannot download sass binary. Response code: %d', $response->getStatusCode()));
+            throw new \Exception(sprintf('Cannot download Sass binary. Response code: %d', $response->getStatusCode()));
         }
 
         $fileHandler = fopen($targetPath, 'w');
@@ -95,7 +94,7 @@ class SassBinary
 
         if ($isZip) {
             if (!\extension_loaded('zip')) {
-                throw new \Exception('Cannot unzip the downloaded sass binary. Please install the "zip" PHP extension.');
+                throw new \Exception('Cannot unzip the downloaded Sass binary. Please install the "zip" PHP extension.');
             }
             $archive = new \ZipArchive();
             $archive->open($targetPath);

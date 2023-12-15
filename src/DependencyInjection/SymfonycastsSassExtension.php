@@ -16,6 +16,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfonycasts\SassBundle\SassBinary;
 
 class SymfonycastsSassExtension extends Extension implements ConfigurationInterface
 {
@@ -31,7 +32,7 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
             ->replaceArgument(0, $config['root_sass'])
             ->replaceArgument(1, '%kernel.project_dir%/var/sass')
             ->replaceArgument(3, $config['binary'])
-            ->replaceArgument(4, $config['version'])
+            ->replaceArgument(4, $config['binary_version'])
             ->replaceArgument(5, $config['embed_sourcemap'])
         ;
 
@@ -82,9 +83,9 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                     ->info('The Sass binary to use')
                     ->defaultNull()
                     ->end()
-                ->scalarNode('version')
+                ->scalarNode('binary_version')
                     ->info('The Sass binary version to download')
-                    ->defaultNull()
+                    ->defaultValue(SassBinary::DEFAULT_VERSION)
                     ->end()
                 ->scalarNode('embed_sourcemap')
                     ->info('Whether to embed the sourcemap in the compiled CSS. By default, enabled only when debug mode is on.')

@@ -25,8 +25,8 @@ class SassBuilder
         private readonly string $cssPath,
         private readonly string $projectRootDir,
         private readonly ?string $binaryPath,
-        private readonly ?string $binaryVersion,
         private readonly bool $embedSourcemap,
+        private readonly ?string $binaryVersion,
     ) {
     }
 

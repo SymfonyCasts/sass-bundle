@@ -144,12 +144,12 @@ The main option is ``root_sass`` option, which defaults to ``assets/styles/app.s
 
 Using a different version
 --------------------------
-This bundle installs for you a default version. However, if you want an explicit version of Dart Sass you can instruct the bundle to download that version, set the ``version`` option:
+This bundle installs for you a default version. However, if you want an explicit version of Dart Sass you can instruct the bundle to download that version, set the ``binary_version`` option:
 
 .. code-block:: yaml
 
     symfonycasts_sass:
-        version: 1.69.0
+        binary_version: 1.69.0
 
 When you change this version, it will not be upgraded automatically. Remove the `var/dart-sass` directory first to rebuild with the configured version.
 
@@ -162,5 +162,3 @@ This bundle already installed for you the right binary. However, if you already 
 
     symfonycasts_sass:
         binary: 'node_modules/.bin/sass'
-
-This configuration overrides any specific version configuration.
