@@ -35,7 +35,7 @@ class SassBinary
     public function createProcess(array $args): Process
     {
         if (null === $this->binaryPath) {
-            $binary = $this->getDefaultBinaryPath();
+            $binary = $this->getDefaultBinaryPath($this->binaryVersion);
             if (!is_file($binary)) {
                 $this->downloadExecutable();
             }
@@ -98,7 +98,7 @@ class SassBinary
             }
             $archive = new \ZipArchive();
             $archive->open($targetPath);
-            $archive->extractTo($this->binaryDownloadDir);
+            $archive->extractTo($this->binaryDownloadDir.'/dart-sass');
             $archive->close();
             unlink($targetPath);
 
@@ -106,7 +106,7 @@ class SassBinary
         } else {
             $archive = new \PharData($targetPath);
             $archive->decompress();
-            $archive->extractTo($this->binaryDownloadDir);
+            $archive->extractTo($this->binaryDownloadDir.'/dart-sass');
 
             // delete the .tar (the .tar.gz is deleted below)
             unlink(substr($targetPath, 0, -3));
@@ -114,7 +114,10 @@ class SassBinary
 
         unlink($targetPath);
 
-        $binaryPath = $this->getDefaultBinaryPath();
+        // Rename the extracted directory to its version
+        rename($this->binaryDownloadDir.'/dart-sass/dart-sass', $this->binaryDownloadDir.'/dart-sass/'.$this->binaryVersion);
+
+        $binaryPath = $this->getDefaultBinaryPath($this->binaryVersion);
         if (!is_file($binaryPath)) {
             throw new \Exception(sprintf('Could not find downloaded binary in "%s".', $binaryPath));
         }
@@ -166,8 +169,8 @@ class SassBinary
         return 'dart-sass-'.$this->binaryVersion.'-'.$os.($isWindows ? '.zip' : '.tar.gz');
     }
 
-    private function getDefaultBinaryPath(): string
+    private function getDefaultBinaryPath(string $version): string
     {
-        return $this->binaryDownloadDir.'/dart-sass/sass';
+        return $this->binaryDownloadDir.'/dart-sass/'.$version.'/sass';
     }
 }

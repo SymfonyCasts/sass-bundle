@@ -151,8 +151,6 @@ This bundle installs for you a default version. However, if you want an explicit
     symfonycasts_sass:
         binary_version: 1.69.0
 
-When you change this version, it will not be upgraded automatically. Remove the `var/dart-sass` directory first to rebuild with the configured version.
-
 Using a different binary
 --------------------------
 
