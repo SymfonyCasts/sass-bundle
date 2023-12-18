@@ -20,17 +20,28 @@ class SassBuilder
     /**
      * @var array<string, bool|string>
      */
-    private readonly array $sassOptions;
+    private array $sassOptions;
 
     /**
+     * Run "sass --help" to see all options.
+     *
      * @see https://sass-lang.com/documentation/cli/dart-sass/
      */
-    private const DEFAULT_OPTIONS = [
-        'charset' => true,
-        'style' => 'expanded',
-        'source_map' => true,
-        'embed_source_map' => false,
-        'embed_sources' => false,
+    private const SASS_OPTIONS = [
+        // Input and Output
+        '--style' => 'expanded',                // Output style.  [expanded (default), compressed]
+        '--[no-]charset' => null,               // Emit a @charset or BOM for CSS with non-ASCII characters.
+        '--[no-]error-css' => null,             // Emit a CSS file when an error occurs.
+        // Source Maps
+        '--[no-]source-map' => true,            // Whether to generate source maps. (defaults to on)
+        '--[no-]embed-sources' => null,         // Embed source file contents in source maps.
+        '--[no-]embed-source-map' => null,      // Embed source map contents in CSS.
+        // Warnings
+        '--[no-]quiet' => null,                 // Don't print warnings.
+        '--[no-]quiet-deps' => null,            // Don't print deprecation warnings for dependencies.
+        // Other
+        '--[no-]stop-on-error' => null,         // Don't compile more files once an error is encountered.
+        '--[no-]trace' => null,                 // Print full Dart stack traces for exceptions.
     ];
 
     /**
@@ -45,38 +56,29 @@ class SassBuilder
         bool|array $sassOptions = [],
     ) {
         if (\is_bool($sassOptions)) {
-            // Until 0.3, the $sassOptions argument was a boolean named $embedSourceMap
+            // Until 0.4, the $sassOptions argument was a boolean named $embedSourceMap
             trigger_deprecation('symfonycasts/sass-bundle', '0.4', 'Passing a boolean to embed the source map is deprecated. Set \'sass_options.embed_source_map\' instead.');
             $sassOptions = ['embed_source_map' => $sassOptions];
             // ...and source maps were always generated.
             $sassOptions['source_map'] = true;
         }
 
-        $this->sassOptions = $this->configureOptions($sassOptions);
+        $this->setOptions($sassOptions);
     }
 
     public function runBuild(bool $watch): Process
     {
         $binary = $this->createBinary();
 
-        $args = $this->getScssCssTargets();
-        if ($watch) {
-            $args[] = '--watch';
-        }
-        foreach ($this->sassOptions as $option => $value) {
-            $option = str_replace('_', '-', $option);
-            if (\is_bool($value)) {
-                $args[] = $value ? '--'.$option : '--no-'.$option;
-                continue;
-            }
-            $args[] = '--'.$option.'='.$value;
-        }
+        $args = [
+            ...$this->getScssCssTargets(),
+            ...$this->getBuildOptions(),
+            ...($watch ? ['--watch'] : []),
+        ];
 
         $process = $binary->createProcess($args);
-
         if ($watch) {
             $process->setTimeout(null);
-
             $inputStream = new InputStream();
             $process->setInput($inputStream);
         }
@@ -92,6 +94,11 @@ class SassBuilder
         $process->start();
 
         return $process;
+    }
+
+    private function createBinary(): SassBinary
+    {
+        return new SassBinary($this->projectRootDir.'/var', $this->binaryPath, $this->output);
     }
 
     /**
@@ -111,11 +118,6 @@ class SassBuilder
         return $targets;
     }
 
-    public function setOutput(SymfonyStyle $output): void
-    {
-        $this->output = $output;
-    }
-
     /**
      * @internal
      */
@@ -126,19 +128,76 @@ class SassBuilder
         return $outputDirectory.'/'.$fileName.'.output.css';
     }
 
-    private function configureOptions(array $options = []): array
+    /**
+     * @return list<string>
+     */
+    public function getBuildOptions(): array
     {
-        $validOptions = array_keys(self::DEFAULT_OPTIONS);
-        $invalidOptions = array_diff(array_keys($options), $validOptions);
-        if (\count($invalidOptions) > 0) {
-            throw new \InvalidArgumentException(sprintf('Invalid Sass options: "%s". Valid options are: "%s".', implode('", "', $invalidOptions), implode('", "', $validOptions)));
+        $buildOptions = [];
+        $options = [...self::SASS_OPTIONS, ...$this->sassOptions];
+        foreach ($options as $option => $value) {
+            // Set only the defined options.
+            if (null === $value) {
+                continue;
+            }
+            // --no-embed-source-map
+            // --quiet
+            if (str_starts_with($option, '--[no-]')) {
+                $buildOptions[] = str_replace('[no-]', $value ? '' : 'no-', $option);
+                continue;
+            }
+            // --style=compressed
+            if (\is_string($value)) {
+                $buildOptions[] = $option.'='.$value;
+            }
         }
 
-        return array_diff_assoc($options, self::DEFAULT_OPTIONS);
+        return $buildOptions;
     }
 
-    private function createBinary(): SassBinary
+    public function setOutput(SymfonyStyle $output): void
     {
-        return new SassBinary($this->projectRootDir.'/var', $this->binaryPath, $this->output);
+        $this->output = $output;
+    }
+
+    /**
+     * Save the Sass options for the build.
+     *
+     * Options are converted from PHP option names to CLI option names.
+     *
+     * @param array<string, bool|string> $options
+     *
+     * @see getOptionMap()
+     */
+    private function setOptions(array $options = []): void
+    {
+        $sassOptions = [];
+        $optionMap = $this->getOptionMap();
+        foreach ($options as $option => $value) {
+            if (!isset($optionMap[$option])) {
+                throw new \InvalidArgumentException(sprintf('Invalid option "%s". Available options are: "%s".', $option, implode('", "', array_keys($optionMap))));
+            }
+            $sassOptions[$optionMap[$option]] = $value;
+        }
+        $this->sassOptions = $sassOptions;
+    }
+
+    /**
+     * Get a map of the Sass options as <php-option> => <cli-option>.
+     * Example: ['embed_source_map' => '--embed-source-map'].
+     *
+     * @return array<string, string>
+     */
+    private function getOptionMap(): array
+    {
+        $phpOptions = [];
+        foreach (array_keys(self::SASS_OPTIONS) as $cliOption) {
+            $phpOption = str_replace(['--[no-]', '--'], '', $cliOption);
+            $phpOption = str_replace('-', '_', $phpOption);
+
+            $phpOptions[$phpOption] = $cliOption;
+        }
+
+        return $phpOptions;
     }
 }
