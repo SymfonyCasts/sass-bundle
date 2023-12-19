@@ -19,6 +19,7 @@ class SassBuilder
 
     /**
      * @param array<string> $sassPaths
+     * @param array<string> $loadPaths defaults to an empty array (BC)
      */
     public function __construct(
         private readonly array $sassPaths,
@@ -26,6 +27,7 @@ class SassBuilder
         private readonly string $projectRootDir,
         private readonly ?string $binaryPath,
         private readonly bool $embedSourcemap,
+        private readonly array $loadPaths = [],
     ) {
     }
 
@@ -41,6 +43,13 @@ class SassBuilder
 
         if ($this->embedSourcemap) {
             $args[] = '--embed-source-map';
+        }
+
+        foreach ($this->loadPaths as $path) {
+            if (!is_dir($path)) {
+                throw new \Exception(sprintf('Path "%s" should point to a valid directory.', $path));
+            }
+            $args[] = sprintf('--load-path=%s', $path);
         }
 
         $process = $binary->createProcess($args);
