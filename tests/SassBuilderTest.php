@@ -16,9 +16,11 @@ class SassBuilderTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unlink(__DIR__.'/fixtures/assets/app.output.css');
-        if (file_exists($sourceMap = __DIR__.'/fixtures/assets/app.output.css.map')) {
-            unlink($sourceMap);
+        if (file_exists($outputCss = __DIR__.'/fixtures/assets/app.output.css')) {
+            unlink($outputCss);
+            if (file_exists($sourceMap = __DIR__.'/fixtures/assets/app.output.css.map')) {
+                unlink($sourceMap);
+            }
         }
         if (is_dir($distDir = __DIR__.'/fixtures/assets/dist')) {
             foreach (scandir($distDir) as $file) {
