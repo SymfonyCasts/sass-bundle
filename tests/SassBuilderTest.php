@@ -25,7 +25,7 @@ class SassBuilderTest extends TestCase
         if (is_dir($distDir = __DIR__.'/fixtures/assets/dist')) {
             foreach (scandir($distDir) as $file) {
                 if (str_ends_with($file, '.css') || str_ends_with($file, '.css.map')) {
-                    unlink($file);
+                    unlink($distDir.'/'.$file);
                 }
             }
         }
