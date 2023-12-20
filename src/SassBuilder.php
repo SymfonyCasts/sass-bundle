@@ -72,8 +72,7 @@ class SassBuilder
 
         $args = [
             ...$this->getScssCssTargets(),
-            ...$this->getBuildOptions(),
-            ...($watch ? ['--watch'] : []),
+            ...$this->getBuildOptions(['--watch' => $watch]),
         ];
 
         $process = $binary->createProcess($args);
@@ -129,12 +128,14 @@ class SassBuilder
     }
 
     /**
+     * @param array<string, bool|string> $options
+     *
      * @return list<string>
      */
-    public function getBuildOptions(): array
+    public function getBuildOptions(array $options = []): array
     {
         $buildOptions = [];
-        $options = [...self::SASS_OPTIONS, ...$this->sassOptions];
+        $options = [...self::SASS_OPTIONS, ...$this->sassOptions, ...$options];
         foreach ($options as $option => $value) {
             // Set only the defined options.
             if (null === $value) {
@@ -149,6 +150,12 @@ class SassBuilder
             // --style=compressed
             if (\is_string($value)) {
                 $buildOptions[] = $option.'='.$value;
+                continue;
+            }
+            // --update
+            // --watch
+            if ($value) {
+                $buildOptions[] = $option;
             }
         }
 
