@@ -140,7 +140,56 @@ To see the full config from this bundle, run:
 
     $ php bin/console config:dump symfonycasts_sass
 
+
+Source Sass file
+~~~~~~~~~~~~~~~~
+
 The main option is ``root_sass`` option, which defaults to ``assets/styles/app.scss``. This represents the source Sass file.
+
+.. code-block:: yaml
+
+    # config/packages/symfonycasts_sass.yaml
+    symfonycasts_sass:
+        root_sass:  'assets/styles/app.scss'
+
+
+Sass Cli Options
+~~~~~~~~~~~~~~~~
+
+You can configure most of the `Dart Sass cli options <https://sass-lang.com/documentation/cli/dart-sass>`_:
+
+.. code-block:: yaml
+
+    # config/packages/symfonycasts_sass.yaml
+    symfonycasts_sass:
+        sass_options:
+            # The output style for the compiled CSS files: expanded or compressed. Defaults to expanded.
+            # style: expanded
+
+            # Emit a @charset or BOM for CSS with non-ASCII characters. Defaults to true in Dart Sass.
+            # charset: true
+
+            # Wether to generate source maps. Defaults to true when "kernel.debug" is true.
+            # source_map: true
+
+            # Embed source file contents in source maps. Defaults to false.
+            # embed_sources:
+
+            # Embed source map contents in CSS. Defaults to false.
+            # embed_source_map:
+
+            # Don't print warnings. Defaults to false.
+            # quiet:
+
+            # Don't print deprecated warnings for dependencies. Defaults to false.
+            # quiet_deps:
+
+            # Don't compile more files once an error is encountered. Defaults to false.
+            # stop_on_error:
+
+            # Print full Dart stack traces for exceptions. Defaults to false.
+            # trace:
+
 
 Using a different binary
 --------------------------
