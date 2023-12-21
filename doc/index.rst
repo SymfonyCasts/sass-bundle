@@ -78,8 +78,18 @@ you can exclude them from asset mapper:
 Note: be sure not to exclude your *main* SCSS file (e.g. ``assets/styles/app.scss``):
 this *is* used in AssetMapper and its contents are swapped for the final, built CSS.
 
+
+How to Get Source Sass Files for 3rd-party Libraries
+----------------------------------------------------
+
+The easiest way to get 3rd-party Sass files is via Composer. For example, see
+the section below to know how to get the source Sass files for Bootstrap.
+
+But if you're using a library that isn't available via Composer, you’ll need
+to either download it to your app manually or grab it via NPM.
+
 Using Bootstrap Sass
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 `Bootstrap <https://getbootstrap.com/>`_ is available as Sass, allowing you to customize the look and feel of your app. An easy way to get the source Sass files is via a Composer package:
 
@@ -96,8 +106,31 @@ Now, import the core ``bootstrap.scss`` from your ``app.scss`` file:
 
     @import '../../vendor/twbs/bootstrap/scss/bootstrap';
 
+Using Bootswatch Sass
+~~~~~~~~~~~~~~~~~~~~~
+
+`Bootswatch <https://bootswatch.com/>`_ is also available as Sass and provides
+free themes for Bootstrap. An easy way to get the source Bootswatch Sass files
+is via a Composer package:
+
+.. code-block:: terminal
+
+    $ composer require thomaspark/bootswatch
+
+Now, import the core Sass theme files along with ``bootstrap.scss`` from your
+``app.scss`` file:
+
+.. code-block:: scss
+
+    @import '../../vendor/thomaspark/bootswatch/dist/[theme]/variables';
+    @import '../../vendor/twbs/bootstrap/scss/bootstrap';
+    @import '../../vendor/thomaspark/bootswatch/dist/[theme]/bootswatch';
+
+Don't forget to install the ``twbs/bootstrap`` main package as well because
+Bootswatch needed it. See the previous section for more details.
+
 Deploying
-----------
+---------
 
 When you deploy, run ``sass:build`` command before the ``asset-map:compile`` command so the built file is available:
 
@@ -132,7 +165,7 @@ Assume there is an ``assets/images/login-bg.png`` file that you want to refer to
 It should be possible to use ``url()`` with a path relative to the current file. However, that is not currently possible. See `this issue <https://github.com/SymfonyCasts/sass-bundle/issues/2>`_ for more details.
 
 Configuration
---------------
+-------------
 
 To see the full config from this bundle, run:
 
@@ -143,7 +176,7 @@ To see the full config from this bundle, run:
 The main option is ``root_sass`` option, which defaults to ``assets/styles/app.scss``. This represents the source Sass file.
 
 Using a different binary
---------------------------
+------------------------
 
 This bundle already installed for you the right binary. However, if you already have a binary installed on your machine you can instruct the bundle to use that binary, set the ``binary`` option:
 
