@@ -7,6 +7,12 @@ This bundle makes it easy to use Sass with Symfony's AssetMapper Component
 - Automatically downloads the correct Sass binary
 - Adds a ``sass:build`` command to build and watch your Sass changes
 
+.. tip::
+
+    While this bundle is great, you may *not* need to use Sass! Native CSS now supports
+    variables and nesting. See `Is it time to drop Sass? <https://gomakethings.com/is-it-time-to-drop-sass/>`_
+    article for some more details.
+
 Installation
 ------------
 
