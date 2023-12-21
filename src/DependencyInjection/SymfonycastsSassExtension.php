@@ -27,11 +27,16 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
+        // BC Layer with SassBundle < 0.4
+        if (isset($config['embed_sourcemap'])) {
+            $config['sass_options']['embed_source_map'] = $config['embed_sourcemap'];
+        }
+
         $container->findDefinition('sass.builder')
             ->replaceArgument(0, $config['root_sass'])
             ->replaceArgument(1, '%kernel.project_dir%/var/sass')
             ->replaceArgument(3, $config['binary'])
-            ->replaceArgument(4, $config['embed_sourcemap'])
+            ->replaceArgument(4, $config['sass_options'])
         ;
 
         $container->findDefinition('sass.css_asset_compiler')
@@ -80,11 +85,50 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                 ->scalarNode('binary')
                     ->info('The Sass binary to use')
                     ->defaultNull()
+                ->end()
+                ->arrayNode('sass_options')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->enumNode('style')
+                            ->info('The style of the generated CSS: compressed or expanded.')
+                            ->values(['compressed', 'expanded'])
+                            ->defaultValue('expanded')
+                        ->end()
+                        ->booleanNode('charset')
+                            ->info('Whether to include the charset declaration in the generated Sass.')
+                        ->end()
+                        ->booleanNode('error_css')
+                            ->info('Emit a CSS file when an error occurs.')
+                        ->end()
+                        ->booleanNode('source_map')
+                            ->info('Whether to generate source maps.')
+                            ->defaultValue(true)
+                        ->end()
+                        ->booleanNode('embed_sources')
+                            ->info('Embed source file contents in source maps.')
+                        ->end()
+                        ->booleanNode('embed_source_map')
+                            ->info('Embed source map contents in CSS.')
+                            ->defaultValue('%kernel.debug%')
+                        ->end()
+                        ->booleanNode('quiet')
+                            ->info('Don\'t print warnings.')
+                        ->end()
+                        ->booleanNode('quiet_deps')
+                            ->info(' Don\'t print compiler warnings from dependencies.')
+                        ->end()
+                        ->booleanNode('stop_on_error')
+                            ->info('Don\'t compile more files once an error is encountered.')
+                        ->end()
+                        ->booleanNode('trace')
+                            ->info('Print full Dart stack traces for exceptions.')
+                        ->end()
                     ->end()
-                ->scalarNode('embed_sourcemap')
-                    ->info('Whether to embed the sourcemap in the compiled CSS. By default, enabled only when debug mode is on.')
-                    ->defaultValue('%kernel.debug%')
-                    ->end()
+                ->end()
+                ->booleanNode('embed_sourcemap')
+                    ->setDeprecated('symfonycast/sass-bundle', '0.4', 'Option "%node%" at "%path%" is deprecated. Use "sass_options.embed_source_map" instead".')
+                    ->defaultNull()
+                ->end()
             ->end()
         ;
 
