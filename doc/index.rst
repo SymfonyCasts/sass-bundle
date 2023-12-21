@@ -153,7 +153,7 @@ The main option is ``root_sass`` option, which defaults to ``assets/styles/app.s
         root_sass:  'assets/styles/app.scss'
 
 
-Sass Cli Options
+Sass CLI Options
 ~~~~~~~~~~~~~~~~
 
 You can configure most of the `Dart Sass cli options <https://sass-lang.com/documentation/cli/dart-sass>`_:
