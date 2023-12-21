@@ -156,7 +156,7 @@ The main option is ``root_sass`` option, which defaults to ``assets/styles/app.s
 Sass CLI Options
 ~~~~~~~~~~~~~~~~
 
-You can configure most of the `Dart Sass cli options <https://sass-lang.com/documentation/cli/dart-sass>`_:
+You can configure most of the `Dart Sass CLI options <https://sass-lang.com/documentation/cli/dart-sass>`_:
 
 .. code-block:: yaml
 
