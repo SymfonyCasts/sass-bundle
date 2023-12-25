@@ -15,7 +15,7 @@ This bundle makes it easy to use Sass with Symfony's AssetMapper Component
 
 .. caution::
 
-    Be aware that this bundle does not work with alpine yet.
+    Be aware that this bundle does not work with the Alpine Linux distribution yet.
     See `this issue <https://github.com/SymfonyCasts/sass-bundle/issues/31/>`_ for some more details.
 
 
