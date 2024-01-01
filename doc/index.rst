@@ -164,6 +164,15 @@ The main option is ``root_sass`` option, which defaults to ``assets/styles/app.s
     symfonycasts_sass:
         root_sass:  'assets/styles/app.scss'
 
+.. note::
+
+The option ``root_sass`` also supports array of paths that represents different source Sass files
+
+.. code-block:: yaml
+
+    symfony_cast:
+        root_sass:
+            - '%kernel.project_dir%/assets/scss/app.scss'
 
 Sass CLI Options
 ~~~~~~~~~~~~~~~~
