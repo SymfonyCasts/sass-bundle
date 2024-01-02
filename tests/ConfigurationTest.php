@@ -19,11 +19,6 @@ final class ConfigurationTest extends TestCase
 {
     use ConfigurationTestCaseTrait;
 
-    protected function getConfiguration(): SymfonycastsSassExtension
-    {
-        return new SymfonycastsSassExtension();
-    }
-
     public function testSingleSassRootPath(): void
     {
         $this->assertConfigurationIsValid([
@@ -33,6 +28,21 @@ final class ConfigurationTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    public function testSingleSassRootPathAsString(): void
+    {
+        $configuration = [
+            'symfonycasts_sass' => [
+                'root_sass' => '%kernel.project_dir%/assets/scss/app.scss',
+            ],
+        ];
+        $this->assertConfigurationIsValid($configuration);
+        $this->assertProcessedConfigurationEquals($configuration, [
+            'root_sass' => [
+                '%kernel.project_dir%/assets/scss/app.scss',
+            ],
+        ], 'root_sass');
     }
 
     public function testSassOptionsEmpty(): void
@@ -135,5 +145,10 @@ final class ConfigurationTest extends TestCase
             ],
         ],
             'Invalid configuration for path "symfonycasts_sass.root_sass": The "root_sass" paths need to end with unique filenames.');
+    }
+
+    protected function getConfiguration(): SymfonycastsSassExtension
+    {
+        return new SymfonycastsSassExtension();
     }
 }
