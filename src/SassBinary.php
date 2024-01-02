@@ -133,10 +133,10 @@ class SassBinary
 
         if (str_contains($os, 'linux')) {
             if ('arm64' === $machine || 'aarch64' === $machine) {
-                return $this->buildBinaryFileName('linux-arm64');
+                return $this->buildBinaryFileName('linux-musl-arm64');
             }
             if ('x86_64' === $machine) {
-                return $this->buildBinaryFileName('linux-x64');
+                return $this->buildBinaryFileName('linux-musl-x64');
             }
 
             throw new \Exception(sprintf('No matching machine found for Linux platform (Machine: %s).', $machine));
