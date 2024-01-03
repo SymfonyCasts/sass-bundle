@@ -87,8 +87,10 @@ you can exclude them from asset mapper:
                 - '*/assets/styles/_*.scss'
                 - '*/assets/styles/**/_*.scss'
 
-Note: be sure not to exclude your *main* SCSS file (e.g. ``assets/styles/app.scss``):
-this *is* used in AssetMapper and its contents are swapped for the final, built CSS.
+.. note::
+
+    Be sure not to exclude your *main* SCSS file (e.g. ``assets/styles/app.scss``):
+    this *is* used in AssetMapper and its contents are swapped for the final, built CSS.
 
 Using Bootstrap Sass
 --------------------
@@ -164,6 +166,15 @@ The main option is ``root_sass`` option, which defaults to ``assets/styles/app.s
     symfonycasts_sass:
         root_sass:  'assets/styles/app.scss'
 
+.. note::
+
+    The ``root_sass`` option also supports an array of paths that represents different source Sass files:
+
+    .. code-block:: yaml
+
+        symfony_cast:
+            root_sass:
+                - '%kernel.project_dir%/assets/scss/app.scss'
 
 Sass CLI Options
 ~~~~~~~~~~~~~~~~
