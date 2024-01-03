@@ -132,11 +132,12 @@ class SassBinary
         }
 
         if (str_contains($os, 'linux')) {
+            $baseName = file_exists('/etc/alpine-release') ? 'linux-musl' : 'linux';
             if ('arm64' === $machine || 'aarch64' === $machine) {
-                return $this->buildBinaryFileName('linux-musl-arm64');
+                return $this->buildBinaryFileName($baseName.'-arm64');
             }
             if ('x86_64' === $machine) {
-                return $this->buildBinaryFileName('linux-musl-x64');
+                return $this->buildBinaryFileName($baseName.'-x64');
             }
 
             throw new \Exception(sprintf('No matching machine found for Linux platform (Machine: %s).', $machine));
