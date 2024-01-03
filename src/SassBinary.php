@@ -16,7 +16,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SassBinary
 {
-    private const VERSION = '1.63.6';
+    private const VERSION = '1.69.6';
     private HttpClientInterface $httpClient;
 
     public function __construct(
