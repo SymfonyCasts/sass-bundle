@@ -16,7 +16,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SassBinary
 {
-    private const VERSION = '1.63.6';
+    private const VERSION = '1.69.7';
     private HttpClientInterface $httpClient;
 
     public function __construct(
@@ -132,11 +132,12 @@ class SassBinary
         }
 
         if (str_contains($os, 'linux')) {
+            $baseName = file_exists('/etc/alpine-release') ? 'linux-musl' : 'linux';
             if ('arm64' === $machine || 'aarch64' === $machine) {
-                return $this->buildBinaryFileName('linux-arm64');
+                return $this->buildBinaryFileName($baseName.'-arm64');
             }
             if ('x86_64' === $machine) {
-                return $this->buildBinaryFileName('linux-x64');
+                return $this->buildBinaryFileName($baseName.'-x64');
             }
 
             throw new \Exception(sprintf('No matching machine found for Linux platform (Machine: %s).', $machine));
