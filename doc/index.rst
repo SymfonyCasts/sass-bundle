@@ -74,7 +74,7 @@ to be started whenever you run ``symfony server:start``:
     # .symfony.local.yaml
     workers:
         # ...
-        tailwind:
+        sass:
             cmd: ['symfony', 'console', 'sass:build', '--watch']
 
 .. tip::
