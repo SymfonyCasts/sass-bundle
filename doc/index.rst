@@ -63,6 +63,25 @@ Then run the command:
 
 And that's it!
 
+Symfony CLI
+~~~~~~~~~~~
+
+If using the `Symfony CLI <https://symfony.com/download>`_, you can add the build
+command as a `worker <https://symfony.com/doc/current/setup/symfony_server.html#configuring-workers>`_
+to be started whenever you run ``symfony server:start``:
+
+.. code-block:: yaml
+    # .symfony.local.yaml
+    workers:
+        # ...
+        tailwind:
+            cmd: ['symfony', 'console', 'sass:build', '--watch']
+
+.. tip::
+
+    If running ``symfony server:start`` as a daemon, you can run
+    ``symfony server:log`` to tail the output of the worker.
+
 How Does it Work?
 -----------------
 
