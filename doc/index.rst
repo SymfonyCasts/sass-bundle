@@ -76,6 +76,7 @@ to be started whenever you run ``symfony server:start``:
         # ...
         tailwind:
             cmd: ['symfony', 'console', 'sass:build', '--watch']
+
 .. tip::
 
     If running ``symfony server:start`` as a daemon, you can run
