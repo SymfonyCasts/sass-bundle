@@ -7,6 +7,12 @@ This bundle makes it easy to use Sass with Symfony's AssetMapper Component
 - Automatically downloads the correct Sass binary
 - Adds a ``sass:build`` command to build and watch your Sass changes
 
+.. tip::
+
+    While this bundle is great, you may *not* need to use Sass! Native CSS now supports
+    variables and nesting. See `Is it time to drop Sass? <https://gomakethings.com/is-it-time-to-drop-sass/>`_
+    article for some more details.
+
 Installation
 ------------
 
@@ -51,6 +57,25 @@ Then run the command:
 
 And that's it!
 
+Symfony CLI
+~~~~~~~~~~~
+
+If using the `Symfony CLI <https://symfony.com/download>`_, you can add the build
+command as a `worker <https://symfony.com/doc/current/setup/symfony_server.html#configuring-workers>`_
+to be started whenever you run ``symfony server:start``:
+
+.. code-block:: yaml
+    # .symfony.local.yaml
+    workers:
+        # ...
+        sass:
+            cmd: ['symfony', 'console', 'sass:build', '--watch']
+
+.. tip::
+
+    If running ``symfony server:start`` as a daemon, you can run
+    ``symfony server:log`` to tail the output of the worker.
+
 How Does it Work?
 -----------------
 
@@ -75,8 +100,10 @@ you can exclude them from asset mapper:
                 - '*/assets/styles/_*.scss'
                 - '*/assets/styles/**/_*.scss'
 
-Note: be sure not to exclude your *main* SCSS file (e.g. ``assets/styles/app.scss``):
-this *is* used in AssetMapper and its contents are swapped for the final, built CSS.
+.. note::
+
+    Be sure not to exclude your *main* SCSS file (e.g. ``assets/styles/app.scss``):
+    this *is* used in AssetMapper and its contents are swapped for the final, built CSS.
 
 Using Bootstrap Sass
 --------------------
@@ -140,11 +167,69 @@ To see the full config from this bundle, run:
 
     $ php bin/console config:dump symfonycasts_sass
 
+
+Source Sass file
+~~~~~~~~~~~~~~~~
+
 The main option is ``root_sass`` option, which defaults to ``assets/styles/app.scss``. This represents the source Sass file.
+
+.. code-block:: yaml
+
+    # config/packages/symfonycasts_sass.yaml
+    symfonycasts_sass:
+        root_sass:  'assets/styles/app.scss'
+
+.. note::
+
+    The ``root_sass`` option also supports an array of paths that represents different source Sass files:
+
+    .. code-block:: yaml
+
+        symfony_cast:
+            root_sass:
+                - '%kernel.project_dir%/assets/scss/app.scss'
+
+Sass CLI Options
+~~~~~~~~~~~~~~~~
+
+You can configure most of the `Dart Sass CLI options <https://sass-lang.com/documentation/cli/dart-sass>`_:
+
+.. code-block:: yaml
+
+    # config/packages/symfonycasts_sass.yaml
+    symfonycasts_sass:
+        sass_options:
+            # The output style for the compiled CSS files: expanded or compressed. Defaults to expanded.
+            # style: expanded
+
+            # Emit a @charset or BOM for CSS with non-ASCII characters. Defaults to true in Dart Sass.
+            # charset: true
+
+            # Wether to generate source maps. Defaults to true when "kernel.debug" is true.
+            # source_map: true
+
+            # Embed source file contents in source maps. Defaults to false.
+            # embed_sources:
+
+            # Embed source map contents in CSS. Defaults to false.
+            # embed_source_map:
+
+            # Don't print warnings. Defaults to false.
+            # quiet:
+
+            # Don't print deprecated warnings for dependencies. Defaults to false.
+            # quiet_deps:
+
+            # Don't compile more files once an error is encountered. Defaults to false.
+            # stop_on_error:
+
+            # Print full Dart stack traces for exceptions. Defaults to false.
+            # trace:
+
 
 Using a different version
 --------------------------
-This bundle installs for you a default version. However, if you want an explicit version of Dart Sass you can instruct the bundle to download that version, set the ``binary_version`` option:
+This bundle installs for you the latest version. However, if you want an explicit version of Dart Sass you can instruct the bundle to download that version, set the ``binary_version`` option:
 
 .. code-block:: yaml
 
