@@ -16,13 +16,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SassBinary
 {
-    public const DEFAULT_VERSION = '1.63.6';
     private HttpClientInterface $httpClient;
+    private ?string $cachedVersion = null;
 
     public function __construct(
         private string $binaryDownloadDir,
         private ?string $binaryPath = null,
-        private ?string $binaryVersion = self::DEFAULT_VERSION,
+        private ?string $binaryVersion = null,
         private ?SymfonyStyle $output = null,
         HttpClientInterface $httpClient = null
     ) {
@@ -35,7 +35,7 @@ class SassBinary
     public function createProcess(array $args): Process
     {
         if (null === $this->binaryPath) {
-            $binary = $this->getDefaultBinaryPath($this->binaryVersion);
+            $binary = $this->getDefaultBinaryPath($this->getVersion());
             if (!is_file($binary)) {
                 $this->downloadExecutable();
             }
@@ -50,7 +50,7 @@ class SassBinary
 
     public function downloadExecutable(): void
     {
-        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s', $this->binaryVersion, $this->getBinaryName());
+        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s', $this->getVersion(), $this->getBinaryName());
         $isZip = str_ends_with($url, '.zip');
 
         $this->output?->note('Downloading Sass binary from '.$url);
@@ -77,8 +77,8 @@ class SassBinary
         ]);
 
         if (404 === $response->getStatusCode()) {
-            if (self::DEFAULT_VERSION !== $this->binaryVersion) {
-                throw new \Exception(sprintf('Cannot download Sass binary. Please verify version `%s` exists for your machine.', $this->binaryVersion));
+            if ($this->getLatestVersion() !== $this->getVersion()) {
+                throw new \Exception(sprintf('Cannot download Sass binary. Please verify version `%s` exists for your machine.', $this->getVersion()));
             }
             throw new \Exception(sprintf('Cannot download Sass binary. Response code: %d', $response->getStatusCode()));
         }
@@ -115,9 +115,9 @@ class SassBinary
         unlink($targetPath);
 
         // Rename the extracted directory to its version
-        rename($this->binaryDownloadDir.'/dart-sass/dart-sass', $this->binaryDownloadDir.'/dart-sass/'.$this->binaryVersion);
+        rename($this->binaryDownloadDir.'/dart-sass/dart-sass', $this->binaryDownloadDir.'/dart-sass/'.$this->getVersion());
 
-        $binaryPath = $this->getDefaultBinaryPath($this->binaryVersion);
+        $binaryPath = $this->getDefaultBinaryPath($this->getVersion());
         if (!is_file($binaryPath)) {
             throw new \Exception(sprintf('Could not find downloaded binary in "%s".', $binaryPath));
         }
@@ -166,11 +166,27 @@ class SassBinary
 
     private function buildBinaryFileName(string $os, bool $isWindows = false): string
     {
-        return 'dart-sass-'.$this->binaryVersion.'-'.$os.($isWindows ? '.zip' : '.tar.gz');
+        return 'dart-sass-'.$this->getVersion().'-'.$os.($isWindows ? '.zip' : '.tar.gz');
     }
 
     private function getDefaultBinaryPath(string $version): string
     {
         return $this->binaryDownloadDir.'/dart-sass/'.$version.'/sass';
+    }
+
+    private function getVersion(): string
+    {
+        return $this->cachedVersion ??= $this->binaryVersion ?? $this->getLatestVersion();
+    }
+
+    private function getLatestVersion(): string
+    {
+        try {
+            $response = $this->httpClient->request('GET', 'https://api.github.com/repos/sass/dart-sass/releases/latest');
+
+            return $response->toArray()['tag_name'] ?? throw new \Exception('Cannot get the latest version name from response JSON.');
+        } catch (\Throwable $e) {
+            throw new \Exception('Cannot determine latest Dart Sass CLI binary version. Please specify a version in the configuration.', previous: $e);
+        }
     }
 }
