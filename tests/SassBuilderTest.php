@@ -38,6 +38,8 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
+            null,
+            false,
         );
 
         $process = $builder->runBuild(false);
@@ -55,6 +57,8 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
+            null,
+            false,
         );
 
         $process = $builder->runBuild(false);
@@ -77,6 +81,7 @@ class SassBuilderTest extends TestCase
             [__DIR__.'/fixtures/assets/app.scss'],
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
+            null,
             null,
             [
                 'embed_sources' => true,
@@ -103,6 +108,7 @@ class SassBuilderTest extends TestCase
             [__DIR__.'/fixtures/assets/app.scss'],
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
+            null,
             null,
             [
                 'style' => 'compressed',
@@ -132,6 +138,7 @@ class SassBuilderTest extends TestCase
             [__DIR__.'/fixtures/assets/app.scss'],
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
+            null,
             null,
             $phpOptions,
         );
@@ -174,6 +181,7 @@ class SassBuilderTest extends TestCase
             array_map(fn (string $file): string => __DIR__.'/fixtures/assets/'.$file, (array) $sassFiles),
             __DIR__.'/fixtures/assets/dist',
             __DIR__.'/fixtures',
+            null,
             null,
             $options,
         );

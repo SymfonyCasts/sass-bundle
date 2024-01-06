@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\MappedAsset;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
+use Symfonycasts\SassBundle\SassBinary;
 
 class FunctionalTest extends KernelTestCase
 {
@@ -34,6 +36,10 @@ class FunctionalTest extends KernelTestCase
     protected function tearDown(): void
     {
         unlink(__DIR__.'/fixtures/assets/app.css');
+        if (file_exists(__DIR__.'/fixtures/var')) {
+            $filesystem = new Filesystem();
+            $filesystem->remove(__DIR__.'/fixtures/var');
+        }
     }
 
     public function testBuildCssIfUsed(): void
@@ -52,5 +58,18 @@ class FunctionalTest extends KernelTestCase
         } else {
             $this->assertStringContainsString('color: red', $asset->content);
         }
+    }
+
+    public function testVersionDownloaded(): void
+    {
+        $testedVersion = '1.69.5'; // This should differ from the SassBinary::DEFAULT_VERSION constant
+        $binary = new SassBinary(binaryDownloadDir: __DIR__.'/fixtures/var/version', binaryVersion: $testedVersion);
+
+        $binary->downloadExecutable();
+        $this->assertDirectoryExists(__DIR__.'/fixtures/var/version/dart-sass/1.69.5');
+
+        $sassVersionProcess = new Process([__DIR__.'/fixtures/var/version/dart-sass/1.69.5/sass', '--version']);
+        $sassVersionProcess->run();
+        $this->assertSame(trim($sassVersionProcess->getOutput(), \PHP_EOL), $testedVersion);
     }
 }
