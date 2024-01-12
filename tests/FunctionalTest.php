@@ -62,7 +62,7 @@ class FunctionalTest extends KernelTestCase
 
     public function testVersionDownloaded(): void
     {
-        $testedVersion = '1.69.5'; // This should differ from the SassBinary::DEFAULT_VERSION constant
+        $testedVersion = '1.69.5'; // This should differ from the latest version which downloaded by default
         $binary = new SassBinary(binaryDownloadDir: __DIR__.'/fixtures/var/version', binaryVersion: $testedVersion);
 
         $binary->downloadExecutable();
