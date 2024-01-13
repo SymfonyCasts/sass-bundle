@@ -38,8 +38,7 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
-            null,
-            false,
+            null
         );
 
         $process = $builder->runBuild(false);
@@ -57,8 +56,7 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
-            null,
-            false,
+            null
         );
 
         $process = $builder->runBuild(false);
