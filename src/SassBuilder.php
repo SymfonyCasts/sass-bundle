@@ -15,13 +15,6 @@ use Symfony\Component\Process\Process;
 
 class SassBuilder
 {
-    private ?SymfonyStyle $output = null;
-
-    /**
-     * @var array<string, bool|string>
-     */
-    private array $sassOptions;
-
     /**
      * Run "sass --help" to see all options.
      *
@@ -44,6 +37,13 @@ class SassBuilder
         '--[no-]trace' => null,                 // Print full Dart stack traces for exceptions.
     ];
 
+    private ?SymfonyStyle $output = null;
+
+    /**
+     * @var array<string, bool|string>
+     */
+    private array $sassOptions;
+
     /**
      * @param array<string>              $sassPaths
      * @param array<string, bool|string> $sassOptions
@@ -64,6 +64,16 @@ class SassBuilder
         }
 
         $this->setOptions($sassOptions);
+    }
+
+    /**
+     * @internal
+     */
+    public static function guessCssNameFromSassFile(string $sassFile, string $outputDirectory): string
+    {
+        $fileName = basename($sassFile, '.scss');
+
+        return $outputDirectory.'/'.$fileName.'.output.css';
     }
 
     public function runBuild(bool $watch): Process
@@ -95,11 +105,6 @@ class SassBuilder
         return $process;
     }
 
-    private function createBinary(): SassBinary
-    {
-        return new SassBinary($this->projectRootDir.'/var', $this->binaryPath, $this->output);
-    }
-
     /**
      * @return array<string>
      */
@@ -115,16 +120,6 @@ class SassBuilder
         }
 
         return $targets;
-    }
-
-    /**
-     * @internal
-     */
-    public static function guessCssNameFromSassFile(string $sassFile, string $outputDirectory): string
-    {
-        $fileName = basename($sassFile, '.scss');
-
-        return $outputDirectory.'/'.$fileName.'.output.css';
     }
 
     /**
@@ -159,12 +154,27 @@ class SassBuilder
             }
         }
 
-        return $buildOptions;
+        // Filter forbidden associations of options.
+        if (\in_array('--no-source-map', $buildOptions, true)) {
+            $buildOptions = array_diff($buildOptions, [
+                '--embed-sources',
+                '--embed-source-map',
+                '--no-embed-sources',
+                '--no-embed-source-map',
+            ]);
+        }
+
+        return array_values($buildOptions);
     }
 
     public function setOutput(SymfonyStyle $output): void
     {
         $this->output = $output;
+    }
+
+    private function createBinary(): SassBinary
+    {
+        return new SassBinary($this->projectRootDir.'/var', $this->binaryPath, $this->output);
     }
 
     /**

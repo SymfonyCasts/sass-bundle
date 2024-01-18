@@ -247,8 +247,6 @@ class SassBuilderTest extends TestCase
                 '--no-charset',
                 '--no-error-css',
                 '--no-source-map',
-                '--no-embed-sources',
-                '--no-embed-source-map',
                 '--no-quiet',
                 '--no-quiet-deps',
                 '--no-stop-on-error',
