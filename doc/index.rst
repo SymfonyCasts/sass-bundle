@@ -185,7 +185,7 @@ The main option is ``root_sass`` option, which defaults to ``assets/styles/app.s
 
     .. code-block:: yaml
 
-        symfony_cast:
+        symfonycasts_sass:
             root_sass:
                 - '%kernel.project_dir%/assets/scss/app.scss'
 
