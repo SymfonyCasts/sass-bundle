@@ -35,6 +35,7 @@ return static function (ContainerConfigurator $container) {
             ->args([
                 abstract_arg('path to scss files'),
                 abstract_arg('path to css output directory'),
+                param('kernel.project_dir'),
                 service('sass.builder'),
             ])
 
