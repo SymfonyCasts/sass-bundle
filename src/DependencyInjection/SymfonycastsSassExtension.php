@@ -36,7 +36,8 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
             ->replaceArgument(0, $config['root_sass'])
             ->replaceArgument(1, '%kernel.project_dir%/var/sass')
             ->replaceArgument(3, $config['binary'])
-            ->replaceArgument(4, $config['sass_options'])
+            ->replaceArgument(4, $config['binary_version'])
+            ->replaceArgument(5, $config['sass_options'])
         ;
 
         $container->findDefinition('sass.css_asset_compiler')
@@ -85,6 +86,10 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                 ->end()
                 ->scalarNode('binary')
                     ->info('The Sass binary to use')
+                    ->defaultNull()
+                ->end()
+                ->scalarNode('binary_version')
+                    ->info('The Sass binary version to download - null means the latest version')
                     ->defaultNull()
                 ->end()
                 ->arrayNode('sass_options')
