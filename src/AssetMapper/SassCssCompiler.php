@@ -12,7 +12,6 @@ namespace Symfonycasts\SassBundle\AssetMapper;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\Compiler\AssetCompilerInterface;
 use Symfony\Component\AssetMapper\MappedAsset;
-use Symfony\Component\Filesystem\Path;
 use Symfonycasts\SassBundle\SassBuilder;
 
 class SassCssCompiler implements AssetCompilerInterface
@@ -20,7 +19,6 @@ class SassCssCompiler implements AssetCompilerInterface
     public function __construct(
         private array $scssPaths,
         private string $cssPathDirectory,
-        private string $projectDir,
         private readonly SassBuilder $sassBuilder
     ) {
     }
@@ -28,9 +26,7 @@ class SassCssCompiler implements AssetCompilerInterface
     public function supports(MappedAsset $asset): bool
     {
         foreach ($this->scssPaths as $path) {
-            $absolutePath = Path::isAbsolute($path) ? $path : Path::makeAbsolute($path, $this->projectDir);
-
-            if (realpath($asset->sourcePath) === realpath($absolutePath)) {
+            if (realpath($asset->sourcePath) === realpath($path)) {
                 return true;
             }
         }

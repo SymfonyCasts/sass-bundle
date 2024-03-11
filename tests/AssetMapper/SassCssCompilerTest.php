@@ -22,22 +22,12 @@ class SassCssCompilerTest extends TestCase
 
         $asset = new MappedAsset('assets/app.scss', __DIR__.'/../fixtures/assets/app.scss');
 
-        $compilerAbsolutePath = new SassCssCompiler(
+        $compiler = new SassCssCompiler(
             [__DIR__.'/../fixtures/assets/app.scss'],
             __DIR__.'/../fixtures/var/sass',
-            __DIR__.'/../fixtures',
             $builder
         );
 
-        $this->assertTrue($compilerAbsolutePath->supports($asset), 'Supports absolute paths');
-
-        $compilerRelativePath = new SassCssCompiler(
-            ['assets/app.scss'],
-            __DIR__.'/../fixtures/var/sass',
-            __DIR__.'/../fixtures',
-            $builder
-        );
-
-        $this->assertTrue($compilerRelativePath->supports($asset), 'Supportes relative paths');
+        $this->assertTrue($compiler->supports($asset));
     }
 }
