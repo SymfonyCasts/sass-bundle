@@ -30,12 +30,11 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
 
         // Ensure paths are absolute
         $normalizeRootSassPath = function ($path) use ($container) {
-            return Path::isAbsolute($container->getParameterBag()->resolveValue($path))
-                ? $path
-                : '%kernel.project_dir%/'.$path
-            ;
+            return Path::makeAbsolute(
+                $container->getParameterBag()->resolveValue($path),
+                $container->getParameter('kernel.project_dir')
+            );
         };
-
         $config['root_sass'] = array_map($normalizeRootSassPath, $config['root_sass']);
 
         // BC Layer with SassBundle < 0.4
