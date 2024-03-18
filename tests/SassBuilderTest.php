@@ -97,6 +97,22 @@ class SassBuilderTest extends TestCase
         $this->assertStringContainsString('color:%20$color;', $result);
     }
 
+    public function testLoadPaths(): void
+    {
+        $builder = $this->createBuilder('app_using_external.scss', [
+            'load_path' => [
+                __DIR__.'/fixtures/external',
+            ],
+        ]);
+
+        $process = $builder->runBuild(false);
+        $process->wait();
+
+        $this->assertTrue($process->isSuccessful(), $process->getOutput());
+        $this->assertFileExists(__DIR__.'/fixtures/assets/dist/app_using_external.output.css');
+        $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/dist/app_using_external.output.css'));
+    }
+
     public function testSassOptions(): void
     {
         $builder = new SassBuilder(
@@ -251,6 +267,17 @@ class SassBuilderTest extends TestCase
                 '--no-quiet-deps',
                 '--no-stop-on-error',
                 '--no-trace',
+            ],
+        ];
+        yield 'Array options are expanded' => [
+            [
+                'style' => null,
+                'load_path' => ['foo', 'bar'],
+                'source_map' => null,
+            ],
+            [
+                '--load-path=foo',
+                '--load-path=bar',
             ],
         ];
     }
