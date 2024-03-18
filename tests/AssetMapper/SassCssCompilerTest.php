@@ -23,8 +23,8 @@ class SassCssCompilerTest extends TestCase
         $asset = new MappedAsset('assets/app.scss', __DIR__.'/../fixtures/assets/app.scss');
 
         $compiler = new SassCssCompiler(
-            [__DIR__.'/../fixtures/assets/app.scss'],
-            __DIR__.'/../fixtures/var/sass',
+            [realpath(__DIR__.'/../fixtures/assets/app.scss')],
+            realpath(__DIR__.'/../fixtures/var/sass'),
             $builder
         );
 
