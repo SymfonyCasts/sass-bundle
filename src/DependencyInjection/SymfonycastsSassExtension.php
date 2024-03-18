@@ -16,6 +16,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\Filesystem\Path;
 
 class SymfonycastsSassExtension extends Extension implements ConfigurationInterface
 {
@@ -26,6 +27,15 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
 
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
+
+        // Ensure paths are absolute
+        $normalizeRootSassPath = function ($path) use ($container) {
+            return Path::makeAbsolute(
+                $container->getParameterBag()->resolveValue($path),
+                $container->getParameter('kernel.project_dir')
+            );
+        };
+        $config['root_sass'] = array_map($normalizeRootSassPath, $config['root_sass']);
 
         // BC Layer with SassBundle < 0.4
         if (isset($config['embed_sourcemap'])) {
