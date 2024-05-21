@@ -240,8 +240,8 @@ This bundle already installed for you the right binary. However, if you already 
     symfonycasts_sass:
         binary: 'node_modules/.bin/sass'
 
-Register additional load paths
--------------------------------
+Register Additional Load Paths
+------------------------------
 
 You can provide additional `load paths <https://sass-lang.com/documentation/at-rules/use/#load-paths>`_ to resolve modules with the ``load_path`` option.
 
