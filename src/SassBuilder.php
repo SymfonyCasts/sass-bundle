@@ -54,6 +54,7 @@ class SassBuilder
         private readonly string $cssPath,
         private readonly string $projectRootDir,
         private readonly ?string $binaryPath,
+        private readonly ?string $binaryVersion,
         bool|array $sassOptions = [],
     ) {
         if (\is_bool($sassOptions)) {
@@ -182,7 +183,7 @@ class SassBuilder
 
     private function createBinary(): SassBinary
     {
-        return new SassBinary($this->projectRootDir.'/var', $this->binaryPath, $this->output);
+        return new SassBinary($this->projectRootDir.'/var', $this->binaryPath, $this->binaryVersion, $this->output);
     }
 
     /**

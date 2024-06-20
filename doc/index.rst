@@ -263,6 +263,15 @@ You can configure most of the `Dart Sass CLI options <https://sass-lang.com/docu
             # trace:
 
 
+Using a different version
+--------------------------
+This bundle installs for you the latest version. However, if you want an explicit version of Dart Sass you can instruct the bundle to download that version, set the ``binary_version`` option:
+
+.. code-block:: yaml
+
+    symfonycasts_sass:
+        binary_version: 1.69.0
+
 Using a different binary
 ------------------------
 
