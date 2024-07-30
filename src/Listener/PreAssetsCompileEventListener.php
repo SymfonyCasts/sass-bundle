@@ -39,6 +39,6 @@ class PreAssetsCompileEventListener
             return;
         }
 
-        throw new \RuntimeException(sprintf('Error compiling sass: "%s"', $process->getErrorOutput()));
+        throw new \RuntimeException(\sprintf('Error compiling sass: "%s"', $process->getErrorOutput()));
     }
 }
