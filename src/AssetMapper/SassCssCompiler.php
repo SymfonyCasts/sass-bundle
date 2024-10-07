@@ -21,7 +21,7 @@ class SassCssCompiler implements AssetCompilerInterface
         private array $scssPaths,
         private string $cssPathDirectory,
         private string $projectDir,
-        private readonly SassBuilder $sassBuilder
+        private readonly SassBuilder $sassBuilder,
     ) {
     }
 

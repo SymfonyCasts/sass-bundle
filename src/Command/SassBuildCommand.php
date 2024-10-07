@@ -23,7 +23,7 @@ use Symfonycasts\SassBundle\SassBuilder;
 class SassBuildCommand extends Command
 {
     public function __construct(
-        private SassBuilder $sassBuilder
+        private SassBuilder $sassBuilder,
     ) {
         parent::__construct();
     }

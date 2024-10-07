@@ -114,7 +114,7 @@ class SassBuilder
         $targets = [];
         foreach ($this->sassPaths as $sassPath) {
             if (!is_file($sassPath)) {
-                throw new \Exception(sprintf('Could not find Sass file: "%s"', $sassPath));
+                throw new \Exception(\sprintf('Could not find Sass file: "%s"', $sassPath));
             }
 
             $targets[] = $sassPath.':'.$this->guessCssNameFromSassFile($sassPath, $this->cssPath);
@@ -200,7 +200,7 @@ class SassBuilder
         $optionMap = $this->getOptionMap();
         foreach ($options as $option => $value) {
             if (!isset($optionMap[$option])) {
-                throw new \InvalidArgumentException(sprintf('Invalid option "%s". Available options are: "%s".', $option, implode('", "', array_keys($optionMap))));
+                throw new \InvalidArgumentException(\sprintf('Invalid option "%s". Available options are: "%s".', $option, implode('", "', array_keys($optionMap))));
             }
             $sassOptions[$optionMap[$option]] = $value;
         }

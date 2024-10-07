@@ -23,7 +23,7 @@ class SassBinary
         private string $binaryDownloadDir,
         private ?string $binaryPath = null,
         private ?SymfonyStyle $output = null,
-        ?HttpClientInterface $httpClient = null
+        ?HttpClientInterface $httpClient = null,
     ) {
         $this->httpClient = $httpClient ?? HttpClient::create();
     }
@@ -49,7 +49,7 @@ class SassBinary
 
     public function downloadExecutable(): void
     {
-        $url = sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s', self::VERSION, $this->getBinaryName());
+        $url = \sprintf('https://github.com/sass/dart-sass/releases/download/%s/%s', self::VERSION, $this->getBinaryName());
         $isZip = str_ends_with($url, '.zip');
 
         $this->output?->note('Downloading Sass binary from '.$url);
@@ -108,7 +108,7 @@ class SassBinary
 
         $binaryPath = $this->getDefaultBinaryPath();
         if (!is_file($binaryPath)) {
-            throw new \Exception(sprintf('Could not find downloaded binary in "%s".', $binaryPath));
+            throw new \Exception(\sprintf('Could not find downloaded binary in "%s".', $binaryPath));
         }
 
         chmod($binaryPath, 0777);
@@ -128,7 +128,7 @@ class SassBinary
                 return $this->buildBinaryFileName('macos-x64');
             }
 
-            throw new \Exception(sprintf('No matching machine found for Darwin platform (Machine: %s).', $machine));
+            throw new \Exception(\sprintf('No matching machine found for Darwin platform (Machine: %s).', $machine));
         }
 
         if (str_contains($os, 'linux')) {
@@ -140,7 +140,7 @@ class SassBinary
                 return $this->buildBinaryFileName($baseName.'-x64');
             }
 
-            throw new \Exception(sprintf('No matching machine found for Linux platform (Machine: %s).', $machine));
+            throw new \Exception(\sprintf('No matching machine found for Linux platform (Machine: %s).', $machine));
         }
 
         if (str_contains($os, 'win')) {
@@ -148,10 +148,10 @@ class SassBinary
                 return $this->buildBinaryFileName('windows-x64', true);
             }
 
-            throw new \Exception(sprintf('No matching machine found for Windows platform (Machine: %s).', $machine));
+            throw new \Exception(\sprintf('No matching machine found for Windows platform (Machine: %s).', $machine));
         }
 
-        throw new \Exception(sprintf('Unknown platform or architecture (OS: %s, Machine: %s).', $os, $machine));
+        throw new \Exception(\sprintf('Unknown platform or architecture (OS: %s, Machine: %s).', $os, $machine));
     }
 
     private function buildBinaryFileName(string $os, bool $isWindows = false): string
