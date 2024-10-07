@@ -286,7 +286,7 @@ For example, an alternative way to use Bootstrap would be to register the vendor
     symfonycasts_sass:
         sass_options:
             load_path:
-                - '%kernel.project_dir%/vendor/bootstrap/scss'
+                - '%kernel.project_dir%/vendor/twbs/bootstrap/scss'
 
 And then import bootstrap from ``app.scss`` with:
 
