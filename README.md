@@ -1,6 +1,8 @@
 Sass For Symfony!
 =================
 
+[![CI](https://github.com/SymfonyCasts/sass-bundle/actions/workflows/ci.yaml/badge.svg)](https://github.com/SymfonyCasts/sass-bundle/actions/workflows/ci.yaml)
+
 This bundle make it easy to use Sass with Symfony's AssetMapper Component
 (no Node required!).
 
