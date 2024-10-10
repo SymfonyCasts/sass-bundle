@@ -23,7 +23,7 @@ class SassBinary
         private string $binaryDownloadDir,
         private ?string $binaryPath = null,
         private ?SymfonyStyle $output = null,
-        ?HttpClientInterface $httpClient = null
+        ?HttpClientInterface $httpClient = null,
     ) {
         $this->httpClient = $httpClient ?? HttpClient::create();
     }

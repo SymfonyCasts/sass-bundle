@@ -21,7 +21,7 @@
     "require-dev": {
         "matthiasnoback/symfony-config-test": "^5.0",
         "symfony/framework-bundle": "^6.3|^7.0",
-        "symfony/phpunit-bridge": "^6.3|^7.0"
+        "symfony/phpunit-bridge": "^6.3.9|^7.0"
     },
     "minimum-stability": "dev",
     "autoload": {
@@ -33,6 +33,9 @@
         "psr-4": {
             "Symfonycasts\\SassBundle\\Tests\\": "tests/"
         }
+    },
+    "conflict": {
+        "phpunit/phpunit": ">=10"
     },
     "scripts": {
         "tools:upgrade": [
