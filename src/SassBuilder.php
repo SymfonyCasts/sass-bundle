@@ -10,6 +10,7 @@
 namespace Symfonycasts\SassBundle;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Process;
 
@@ -182,7 +183,9 @@ class SassBuilder
 
     private function createBinary(): SassBinary
     {
-        return new SassBinary($this->projectRootDir.'/var', $this->binaryPath, $this->output);
+        $binaryPath = $this->binaryPath ?? (new ExecutableFinder())->find('sass');
+
+        return new SassBinary($this->projectRootDir.'/var', $binaryPath, $this->output);
     }
 
     /**
