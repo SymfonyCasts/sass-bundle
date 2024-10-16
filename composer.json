@@ -34,9 +34,6 @@
             "Symfonycasts\\SassBundle\\Tests\\": "tests/"
         }
     },
-    "conflict": {
-        "phpunit/phpunit": ">=10"
-    },
     "scripts": {
         "tools:upgrade": [
             "@tools:upgrade:php-cs-fixer",
