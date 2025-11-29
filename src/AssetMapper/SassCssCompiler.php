@@ -29,7 +29,7 @@ class SassCssCompiler implements AssetCompilerInterface
          */
         private readonly string $cssPathDirectory,
 
-        private readonly SassBuilder $sassBuilder
+        private readonly SassBuilder $sassBuilder,
     ) {
     }
 

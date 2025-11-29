@@ -1,7 +1,9 @@
 includes:
-        - vendor/phpstan/phpstan-symfony/extension.neon
+        - tools/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:
     level: 5
     paths:
         - src
+    ignoreErrors:
+        - '#Call to method arrayNode\(\) on an unknown class Symfony\\Component\\Config\\Definition\\Builder\\NodeBuilder#'

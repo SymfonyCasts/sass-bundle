@@ -10,6 +10,7 @@
 namespace Symfonycasts\SassBundle;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Process;
 
@@ -25,6 +26,7 @@ class SassBuilder
         '--style' => 'expanded',                // Output style.  [expanded (default), compressed]
         '--[no-]charset' => null,               // Emit a @charset or BOM for CSS with non-ASCII characters.
         '--[no-]error-css' => null,             // Emit a CSS file when an error occurs.
+        '--load-path' => null,                  // Additional load paths
         // Source Maps
         '--[no-]source-map' => true,            // Whether to generate source maps. (defaults to on)
         '--[no-]embed-sources' => null,         // Embed source file contents in source maps.
@@ -113,7 +115,7 @@ class SassBuilder
         $targets = [];
         foreach ($this->sassPaths as $sassPath) {
             if (!is_file($sassPath)) {
-                throw new \Exception(sprintf('Could not find Sass file: "%s"', $sassPath));
+                throw new \Exception(\sprintf('Could not find Sass file: "%s"', $sassPath));
             }
 
             $targets[] = $sassPath.':'.$this->guessCssNameFromSassFile($sassPath, $this->cssPath);
@@ -123,7 +125,7 @@ class SassBuilder
     }
 
     /**
-     * @param array<string, bool|string> $options
+     * @param array<string, bool|array|string> $options
      *
      * @return list<string>
      */
@@ -145,6 +147,13 @@ class SassBuilder
             // --style=compressed
             if (\is_string($value)) {
                 $buildOptions[] = $option.'='.$value;
+                continue;
+            }
+            // --load-path
+            if (\is_array($value)) {
+                foreach ($value as $item) {
+                    $buildOptions[] = $option.'='.$item;
+                }
                 continue;
             }
             // --update
@@ -174,7 +183,9 @@ class SassBuilder
 
     private function createBinary(): SassBinary
     {
-        return new SassBinary($this->projectRootDir.'/var', $this->binaryPath, $this->output);
+        $binaryPath = $this->binaryPath ?? (new ExecutableFinder())->find('sass');
+
+        return new SassBinary($this->projectRootDir.'/var', $binaryPath, $this->output);
     }
 
     /**
@@ -182,7 +193,7 @@ class SassBuilder
      *
      * Options are converted from PHP option names to CLI option names.
      *
-     * @param array<string, bool|string> $options
+     * @param array<string, bool|array|string> $options
      *
      * @see getOptionMap()
      */
@@ -192,7 +203,7 @@ class SassBuilder
         $optionMap = $this->getOptionMap();
         foreach ($options as $option => $value) {
             if (!isset($optionMap[$option])) {
-                throw new \InvalidArgumentException(sprintf('Invalid option "%s". Available options are: "%s".', $option, implode('", "', array_keys($optionMap))));
+                throw new \InvalidArgumentException(\sprintf('Invalid option "%s". Available options are: "%s".', $option, implode('", "', array_keys($optionMap))));
             }
             $sassOptions[$optionMap[$option]] = $value;
         }
