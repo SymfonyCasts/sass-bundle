@@ -103,8 +103,7 @@ you can exclude them from AssetMapper:
             paths:
                 - assets/
             excluded_patterns:
-                - '*/assets/styles/_*.scss'
-                - '*/assets/styles/**/_*.scss'
+                - '**/assets/styles/**/_*.scss'
 
 .. note::
 
