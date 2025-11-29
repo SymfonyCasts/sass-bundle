@@ -137,7 +137,7 @@ Now, import the core ``bootstrap.scss`` from your ``app.scss`` file:
     /* Override some Bootstrap variables */
     $red: #FB4040;
 
-    @import '../../vendor/twbs/bootstrap/scss/bootstrap';
+    @use '../../vendor/twbs/bootstrap/scss/bootstrap';
 
 Using Bootswatch Sass
 ~~~~~~~~~~~~~~~~~~~~~
@@ -155,9 +155,9 @@ Now, import the core Sass theme files along with ``bootstrap.scss`` from your
 
 .. code-block:: scss
 
-    @import '../../vendor/thomaspark/bootswatch/dist/[theme]/variables';
-    @import '../../vendor/twbs/bootstrap/scss/bootstrap';
-    @import '../../vendor/thomaspark/bootswatch/dist/[theme]/bootswatch';
+    @use '../../vendor/thomaspark/bootswatch/dist/[theme]/variables';
+    @use '../../vendor/twbs/bootstrap/scss/bootstrap';
+    @use '../../vendor/thomaspark/bootswatch/dist/[theme]/bootswatch';
 
 Don't forget to install the ``twbs/bootstrap`` main package as well because
 Bootswatch needed it. See the previous section for more details.
@@ -311,4 +311,4 @@ And then import bootstrap from ``app.scss`` with:
 
 .. code-block:: scss
 
-    @import 'bootstrap';
+    @use 'bootstrap';
