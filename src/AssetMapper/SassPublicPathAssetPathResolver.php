@@ -21,8 +21,8 @@ class SassPublicPathAssetPathResolver implements PublicAssetsPathResolverInterfa
     {
         $path = $this->decorator->resolvePublicPath($logicalPath);
 
-        if (str_contains($path, '.scss')) {
-            return str_replace('.scss', '.css', $path);
+        if (str_ends_with($path, '.scss')) {
+            return substr($path, 0, -5).'.css';
         }
 
         return $path;
@@ -36,8 +36,8 @@ class SassPublicPathAssetPathResolver implements PublicAssetsPathResolverInterfa
 
         $path = $this->decorator->getPublicFilesystemPath();
 
-        if (str_contains($path, '.scss')) {
-            return str_replace('.scss', '.css', $path);
+        if (str_ends_with($path, '.scss')) {
+            return substr($path, 0, -5).'.css';
         }
 
         return $path;
