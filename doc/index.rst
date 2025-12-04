@@ -124,7 +124,11 @@ Using Bootstrap Sass
 ~~~~~~~~~~~~~~~~~~~~
 
 `Bootstrap <https://getbootstrap.com/>`_ is available as Sass, allowing you to customize
-the look and feel of your app. An easy way to get the source Sass files is via a Composer package:
+the look and feel of your app. 
+
+.. note:: The ``@use`` directive will be supported in Bootstrap version 6. Until then, use the deprecated ``@import`` directive to ensure overrides are applied.
+
+An easy way to get the source Sass files is via a Composer package:
 
 .. code-block:: terminal
 
@@ -137,7 +141,7 @@ Now, import the core ``bootstrap.scss`` from your ``app.scss`` file:
     /* Override some Bootstrap variables */
     $red: #FB4040;
 
-    @use '../../vendor/twbs/bootstrap/scss/bootstrap';
+    @import '../../vendor/twbs/bootstrap/scss/bootstrap';
 
 Using Bootswatch Sass
 ~~~~~~~~~~~~~~~~~~~~~
@@ -155,9 +159,9 @@ Now, import the core Sass theme files along with ``bootstrap.scss`` from your
 
 .. code-block:: scss
 
-    @use '../../vendor/thomaspark/bootswatch/dist/[theme]/variables';
-    @use '../../vendor/twbs/bootstrap/scss/bootstrap';
-    @use '../../vendor/thomaspark/bootswatch/dist/[theme]/bootswatch';
+    @import '../../vendor/thomaspark/bootswatch/dist/[theme]/variables';
+    @import '../../vendor/twbs/bootstrap/scss/bootstrap';
+    @import '../../vendor/thomaspark/bootswatch/dist/[theme]/bootswatch';
 
 Don't forget to install the ``twbs/bootstrap`` main package as well because
 Bootswatch needed it. See the previous section for more details.
@@ -311,4 +315,4 @@ And then import bootstrap from ``app.scss`` with:
 
 .. code-block:: scss
 
-    @use 'bootstrap';
+    @import 'bootstrap';
