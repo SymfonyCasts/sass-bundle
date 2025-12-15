@@ -126,7 +126,9 @@ Using Bootstrap Sass
 `Bootstrap <https://getbootstrap.com/>`_ is available as Sass, allowing you to customize
 the look and feel of your app. 
 
-.. note:: The ``@use`` directive will be supported in Bootstrap version 6. Until then, use the deprecated ``@import`` directive to ensure overrides are applied.
+.. note::
+
+    The ``@use`` directive will be supported in Bootstrap version 6. Until then, use the deprecated ``@import`` directive to ensure overrides are applied.
 
 An easy way to get the source Sass files is via a Composer package:
 
