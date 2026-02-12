@@ -31,7 +31,7 @@ class PreAssetsCompileEventListener
 
         $process = $this->sassBuilder->runBuild(false);
 
-        $process->wait(function ($type, $buffer) use ($io) {
+        $process->wait(static function ($type, $buffer) use ($io) {
             $io->write($buffer);
         });
 

@@ -95,14 +95,13 @@ class SassBinary
             unlink($targetPath);
 
             return;
-        } else {
-            $archive = new \PharData($targetPath);
-            $archive->decompress();
-            $archive->extractTo($this->binaryDownloadDir);
-
-            // delete the .tar (the .tar.gz is deleted below)
-            unlink(substr($targetPath, 0, -3));
         }
+        $archive = new \PharData($targetPath);
+        $archive->decompress();
+        $archive->extractTo($this->binaryDownloadDir);
+
+        // delete the .tar (the .tar.gz is deleted below)
+        unlink(substr($targetPath, 0, -3));
 
         unlink($targetPath);
 

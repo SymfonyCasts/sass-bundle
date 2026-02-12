@@ -187,7 +187,7 @@ class SassBuilderTest extends TestCase
     private function createBuilder(array|string $sassFiles, array $options = []): SassBuilder
     {
         return new SassBuilder(
-            array_map(fn (string $file): string => __DIR__.'/fixtures/assets/'.$file, (array) $sassFiles),
+            array_map(static fn (string $file): string => __DIR__.'/fixtures/assets/'.$file, (array) $sassFiles),
             __DIR__.'/fixtures/assets/dist',
             __DIR__.'/fixtures',
             null,

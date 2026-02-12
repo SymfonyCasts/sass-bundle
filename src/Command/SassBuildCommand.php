@@ -43,7 +43,7 @@ class SassBuildCommand extends Command
             $input->getOption('watch')
         );
 
-        $process->wait(function ($type, $buffer) use ($io) {
+        $process->wait(static function ($type, $buffer) use ($io) {
             $io->write($buffer);
         });
 
