@@ -20,6 +20,7 @@ return static function (ContainerConfigurator $container) {
                 param('kernel.project_dir'),
                 abstract_arg('path to binary'),
                 abstract_arg('sass options'),
+                abstract_arg('search binary'),
             ])
 
         ->set('sass.command.build', SassBuildCommand::class)

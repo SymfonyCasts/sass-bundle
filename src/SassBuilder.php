@@ -56,6 +56,7 @@ class SassBuilder
         private readonly string $projectRootDir,
         private readonly ?string $binaryPath,
         bool|array $sassOptions = [],
+        private readonly bool $searchBinary = true,
     ) {
         if (\is_bool($sassOptions)) {
             // Until 0.4, the $sassOptions argument was a boolean named $embedSourceMap
@@ -183,7 +184,11 @@ class SassBuilder
 
     private function createBinary(): SassBinary
     {
-        $binaryPath = $this->binaryPath ?? (new ExecutableFinder())->find('sass');
+        $binaryPath = $this->binaryPath;
+
+        if (null === $binaryPath && $this->searchBinary) {
+            $binaryPath = (new ExecutableFinder())->find('sass');
+        }
 
         return new SassBinary($this->projectRootDir.'/var', $binaryPath, $this->output);
     }
