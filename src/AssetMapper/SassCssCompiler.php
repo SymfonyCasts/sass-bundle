@@ -12,35 +12,39 @@ namespace Symfonycasts\SassBundle\AssetMapper;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\Compiler\AssetCompilerInterface;
 use Symfony\Component\AssetMapper\MappedAsset;
-use Symfony\Component\Filesystem\Path;
 use Symfonycasts\SassBundle\SassBuilder;
 
 class SassCssCompiler implements AssetCompilerInterface
 {
     public function __construct(
-        private array $scssPaths,
-        private string $cssPathDirectory,
-        private string $projectDir,
+        /**
+         * Absolute paths to the .scss files.
+         *
+         * @var string[] $scssPaths
+         */
+        private readonly array $scssPaths,
+
+        /**
+         * Absolute path to the directory where the .css files are stored.
+         */
+        private readonly string $cssPathDirectory,
+
         private readonly SassBuilder $sassBuilder,
     ) {
     }
 
     public function supports(MappedAsset $asset): bool
     {
-        foreach ($this->scssPaths as $path) {
-            $absolutePath = Path::isAbsolute($path) ? $path : Path::makeAbsolute($path, $this->projectDir);
-
-            if (realpath($asset->sourcePath) === realpath($absolutePath)) {
-                return true;
-            }
+        if (!str_ends_with($asset->sourcePath, '.scss')) {
+            return false;
         }
 
-        return false;
+        return \in_array(realpath($asset->sourcePath), $this->scssPaths, true);
     }
 
     public function compile(string $content, MappedAsset $asset, AssetMapperInterface $assetMapper): string
     {
-        $cssFile = $this->sassBuilder->guessCssNameFromSassFile($asset->sourcePath, $this->cssPathDirectory);
+        $cssFile = $this->sassBuilder::guessCssNameFromSassFile($asset->sourcePath, $this->cssPathDirectory);
 
         $asset->addFileDependency($cssFile);
 
