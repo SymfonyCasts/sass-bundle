@@ -71,15 +71,14 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                                 return false;
                             }
 
-                            $filenames = [];
+                            $unique = [];
                             foreach ($paths as $path) {
-                                $filename = basename($path, '.scss');
-                                $filenames[$filename] = $filename;
+                                $unique[$path] = true;
                             }
 
-                            return \count($filenames) !== \count($paths);
+                            return \count($unique) !== \count($paths);
                         })
-                        ->thenInvalid('The "root_sass" paths need to end with unique filenames.')
+                        ->thenInvalid('The "root_sass" paths must be unique (duplicate entries found).')
                         ->end()
                     ->defaultValue(['%kernel.project_dir%/assets/styles/app.scss'])
                 ->end()

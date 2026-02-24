@@ -11,14 +11,15 @@ namespace Symfonycasts\SassBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfonycasts\SassBundle\SassBuilder;
+use Symfonycasts\SassBundle\SassFileHelper;
 
 class SassBuilderTest extends TestCase
 {
     protected function tearDown(): void
     {
-        if (file_exists($outputCss = __DIR__.'/fixtures/assets/app.output.css')) {
+        if (file_exists($outputCss = __DIR__.'/fixtures/assets/'.self::getFileName('app'))) {
             unlink($outputCss);
-            if (file_exists($sourceMap = __DIR__.'/fixtures/assets/app.output.css.map')) {
+            if (file_exists($sourceMap = __DIR__.'/fixtures/assets/'.self::getFileName('app').'.map')) {
                 unlink($sourceMap);
             }
         }
@@ -29,6 +30,12 @@ class SassBuilderTest extends TestCase
                 }
             }
         }
+    }
+
+    public static function getFileName(string $basename): string
+    {
+        $filename = SassFileHelper::hashFilename($basename);
+        return $filename.'.output.css';
     }
 
     public function testIntegration(): void
@@ -44,8 +51,9 @@ class SassBuilderTest extends TestCase
         $process->wait();
 
         $this->assertTrue($process->isSuccessful());
-        $this->assertFileExists(__DIR__.'/fixtures/assets/app.output.css');
-        $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/app.output.css'));
+
+        $this->assertFileExists(__DIR__.'/fixtures/assets/'.self::getFileName('app'));
+        $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/'.self::getFileName('app')));
     }
 
     public function testSassDefaultOptions(): void
@@ -61,9 +69,9 @@ class SassBuilderTest extends TestCase
         $process->wait();
 
         $this->assertTrue($process->isSuccessful());
-        $this->assertFileExists(__DIR__.'/fixtures/assets/app.output.css');
+        $this->assertFileExists(__DIR__.'/fixtures/assets/'.self::getFileName('app'));
 
-        $result = file_get_contents(__DIR__.'/fixtures/assets/app.output.css');
+        $result = file_get_contents(__DIR__.'/fixtures/assets/'.self::getFileName('app'));
 
         $this->assertStringContainsString("\nul li {\n", $result);
         $this->assertStringContainsString("color: red;\n", $result);
@@ -88,9 +96,9 @@ class SassBuilderTest extends TestCase
         $process->wait();
 
         $this->assertTrue($process->isSuccessful(), $process->getOutput());
-        $this->assertFileExists(__DIR__.'/fixtures/assets/app.output.css');
+        $this->assertFileExists(__DIR__.'/fixtures/assets/'.self::getFileName('app'));
 
-        $result = file_get_contents(__DIR__.'/fixtures/assets/app.output.css');
+        $result = file_get_contents(__DIR__.'/fixtures/assets/'.self::getFileName('app'));
 
         $this->assertStringContainsString('sourceMappingURL=data:application/json', $result);
         $this->assertStringContainsString('color: red', $result);
@@ -109,8 +117,8 @@ class SassBuilderTest extends TestCase
         $process->wait();
 
         $this->assertTrue($process->isSuccessful(), $process->getOutput());
-        $this->assertFileExists(__DIR__.'/fixtures/assets/dist/app_using_external.output.css');
-        $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/dist/app_using_external.output.css'));
+        $this->assertFileExists(__DIR__.'/fixtures/assets/dist/'.self::getFileName('app_using_external'));
+        $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/dist/'.self::getFileName('app_using_external')));
     }
 
     public function testSassOptions(): void
@@ -130,9 +138,9 @@ class SassBuilderTest extends TestCase
         $process->wait();
 
         $this->assertTrue($process->isSuccessful(), $process->getExitCodeText());
-        $this->assertFileExists(__DIR__.'/fixtures/assets/app.output.css');
+        $this->assertFileExists(__DIR__.'/fixtures/assets/'.self::getFileName('app'));
 
-        $result = file_get_contents(__DIR__.'/fixtures/assets/app.output.css');
+        $result = file_get_contents(__DIR__.'/fixtures/assets/'.self::getFileName('app'));
 
         $this->assertStringNotContainsString('/** FOO BAR */', $result);
         $this->assertStringContainsString('}ul li{color:red}', $result);

@@ -14,6 +14,7 @@ use Symfony\Component\AssetMapper\Compiler\AssetCompilerInterface;
 use Symfony\Component\AssetMapper\MappedAsset;
 use Symfony\Component\Filesystem\Path;
 use Symfonycasts\SassBundle\SassBuilder;
+use Symfonycasts\SassBundle\SassFileHelper;
 
 class SassCssCompiler implements AssetCompilerInterface
 {
@@ -27,11 +28,14 @@ class SassCssCompiler implements AssetCompilerInterface
 
     public function supports(MappedAsset $asset): bool
     {
+        $helper = new SassFileHelper();
         foreach ($this->scssPaths as $path) {
-            $absolutePath = Path::isAbsolute($path) ? $path : Path::makeAbsolute($path, $this->projectDir);
+            foreach ($helper->resolveSassInputs($path, $this->projectDir) as $resolvedFile) {
+                $absolutePath = Path::isAbsolute($resolvedFile) ? $resolvedFile : Path::makeAbsolute($resolvedFile, $this->projectDir);
 
-            if (realpath($asset->sourcePath) === realpath($absolutePath)) {
-                return true;
+                if (realpath($asset->sourcePath) === realpath($absolutePath)) {
+                    return true;
+                }
             }
         }
 

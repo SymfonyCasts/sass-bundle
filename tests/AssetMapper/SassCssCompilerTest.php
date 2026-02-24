@@ -38,6 +38,31 @@ class SassCssCompilerTest extends TestCase
             $builder
         );
 
-        $this->assertTrue($compilerRelativePath->supports($asset), 'Supportes relative paths');
+        $this->assertTrue($compilerRelativePath->supports($asset), 'Supports relative paths');
+    }
+
+    public function testSupportsGlob()
+    {
+        $builder = $this->createMock(SassBuilder::class);
+
+        $asset = new MappedAsset('assets/lib/libcss.scss', __DIR__.'/../fixtures/assets/lib/libcss.scss');
+
+        $compilerAbsolutePath = new SassCssCompiler(
+            [__DIR__.'/../fixtures/assets/*.scss', __DIR__.'/../fixtures/assets/**/*.scss'],
+            __DIR__.'/../fixtures/var/sass',
+            __DIR__.'/../fixtures',
+            $builder
+        );
+
+        $this->assertTrue($compilerAbsolutePath->supports($asset), 'Supports absolute paths');
+
+        $compilerRelativePath = new SassCssCompiler(
+            ['assets/lib/*.scss', 'assets/lib/**/*.scss'],
+            __DIR__.'/../fixtures/var/sass',
+            __DIR__.'/../fixtures',
+            $builder
+        );
+
+        $this->assertTrue($compilerRelativePath->supports($asset), 'Supports relative paths');
     }
 }

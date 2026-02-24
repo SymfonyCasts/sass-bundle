@@ -137,17 +137,53 @@ final class ConfigurationTest extends TestCase
         ]);
     }
 
-    public function testMultipleSassRootPathsWithSameFilename(): void
+    public function testGlobSassRootPaths(): void
     {
-        $this->assertConfigurationIsInvalid([
+        $this->assertConfigurationIsValid([
+            'symfonycasts_sass' => [
+                'root_sass' => [
+                    '%kernel.project_dir%/assets/scss/*.scss',
+                ],
+            ],
+        ]);
+    }
+
+    public function testMultipleSassRootPathsWithSameFilenameDiffPaths(): void
+    {
+        $this->assertConfigurationIsValid([
             'symfonycasts_sass' => [
                 'root_sass' => [
                     '%kernel.project_dir%/assets/scss/app.scss',
                     '%kernel.project_dir%/assets/admin/scss/app.scss',
                 ],
             ],
+        ]);
+    }
+
+    public function testMultipleSassRootPathsWithSameFilenameSamePath(): void
+    {
+        $this->assertConfigurationIsInvalid([
+            'symfonycasts_sass' => [
+                'root_sass' => [
+                    '%kernel.project_dir%/assets/scss/app.scss',
+                    '%kernel.project_dir%/assets/scss/app.scss',
+                ],
+            ],
         ],
-            'Invalid configuration for path "symfonycasts_sass.root_sass": The "root_sass" paths need to end with unique filenames.');
+            'Invalid configuration for path "symfonycasts_sass.root_sass": The "root_sass" paths must be unique (duplicate entries found).');
+    }
+
+    public function testGlobMultipleSassRootPathsWithSameFilename(): void
+    {
+        $this->assertConfigurationIsValid([
+            'symfonycasts_sass' => [
+                'root_sass' => [
+                    '%kernel.project_dir%/assets/scss/*.scss',
+                    '%kernel.project_dir%/assets/scss/app.scss',
+                    '%kernel.project_dir%/assets/admin/scss/app.scss',
+                ],
+            ],
+        ]);
     }
 
     protected function getConfiguration(): SymfonycastsSassExtension
