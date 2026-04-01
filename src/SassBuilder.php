@@ -55,8 +55,8 @@ class SassBuilder
         private readonly string $cssPath,
         private readonly string $projectRootDir,
         private readonly ?string $binaryPath,
-        bool|array $sassOptions = [],
         private readonly bool $searchBinary,
+        bool|array $sassOptions = [],
     ) {
         if (\is_bool($sassOptions)) {
             // Until 0.4, the $sassOptions argument was a boolean named $embedSourceMap
