@@ -35,6 +35,7 @@ class SassBuilderTest extends TestCase
     public static function getFileName(string $basename): string
     {
         $filename = SassFileHelper::hashFilename($basename);
+
         return $filename.'.output.css';
     }
 

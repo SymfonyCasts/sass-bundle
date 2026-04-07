@@ -117,7 +117,7 @@ class SassBuilder
         $helper = new SassFileHelper();
 
         foreach ($this->sassPaths as $sassPath) {
-            foreach ($helper->resolveSassInputs($sassPath, $this->projectRootDir) as $resolvedFile) {
+            foreach ($helper->resolveSassInput($sassPath, $this->projectRootDir) as $resolvedFile) {
                 $targets[] = $resolvedFile.':'.$this->guessCssNameFromSassFile($resolvedFile, $this->cssPath);
             }
         }

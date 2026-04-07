@@ -5,7 +5,10 @@ namespace Symfonycasts\SassBundle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Path;
 
-class SassFileHelper
+/**
+ * @internal
+ */
+final class SassFileHelper
 {
     /**
      * Expands a configured sass path into concrete input files.
@@ -19,7 +22,7 @@ class SassFileHelper
      *
      * @return array<string> absolute file paths
      */
-    public function resolveSassInputs(string $sassPath, ?string $baseDir = null): array
+    public function resolveSassInput(string $sassPath, ?string $baseDir = null): array
     {
         if (null !== $baseDir && !Path::isAbsolute($sassPath)) {
             $sassPath = Path::makeAbsolute($sassPath, $baseDir);

@@ -71,12 +71,12 @@ class SymfonycastsSassExtension extends Extension implements ConfigurationInterf
                                 return false;
                             }
 
-                            $unique = [];
+                            $uniqueFilenames = [];
                             foreach ($paths as $path) {
-                                $unique[$path] = true;
+                                $uniqueFilenames[$path] = true;
                             }
 
-                            return \count($unique) !== \count($paths);
+                            return \count($uniqueFilenames) !== \count($paths);
                         })
                         ->thenInvalid('The "root_sass" paths must be unique (duplicate entries found).')
                         ->end()

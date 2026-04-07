@@ -30,7 +30,7 @@ class SassCssCompiler implements AssetCompilerInterface
     {
         $helper = new SassFileHelper();
         foreach ($this->scssPaths as $path) {
-            foreach ($helper->resolveSassInputs($path, $this->projectDir) as $resolvedFile) {
+            foreach ($helper->resolveSassInput($path, $this->projectDir) as $resolvedFile) {
                 $absolutePath = Path::isAbsolute($resolvedFile) ? $resolvedFile : Path::makeAbsolute($resolvedFile, $this->projectDir);
 
                 if (realpath($asset->sourcePath) === realpath($absolutePath)) {

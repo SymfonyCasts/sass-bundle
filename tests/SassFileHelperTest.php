@@ -12,7 +12,7 @@ class SassFileHelperTest extends TestCase
         $helper = new SassFileHelper();
 
         $projectDir = __DIR__.'/fixtures';
-        $inputs = $helper->resolveSassInputs('assets/lib/*.scss', $projectDir);
+        $inputs = $helper->resolveSassInput('assets/lib/*.scss', $projectDir);
 
         $this->assertNotEmpty($inputs, 'Expected at least one match for relative glob under fixtures.');
         $this->assertContains($projectDir.'/assets/lib/libcss.scss', $inputs);
@@ -23,7 +23,7 @@ class SassFileHelperTest extends TestCase
         $helper = new SassFileHelper();
 
         $projectDir = __DIR__.'/fixtures';
-        $inputs = $helper->resolveSassInputs('assets/**/*.scss', $projectDir);
+        $inputs = $helper->resolveSassInput('assets/**/*.scss', $projectDir);
 
         $this->assertNotEmpty($inputs, 'Expected at least one match for relative ** glob under fixtures.');
         $this->assertContains($projectDir.'/assets/lib/libcss.scss', $inputs);
