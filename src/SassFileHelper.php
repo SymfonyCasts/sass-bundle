@@ -79,13 +79,13 @@ final class SassFileHelper
 
         $files = [];
         foreach ($finder as $file) {
-            $rel = str_replace('\\', '/', $file->getRelativePathname());
+            $rel = self::normalizePath($file->getRelativePathname());
 
             if (!preg_match($regex, $rel)) {
                 continue;
             }
 
-            $files[] = $file->getRealPath() ?: $file->getPathname();
+            $files[] = self::normalizePath($file->getRealPath() ?: $file->getPathname());
         }
 
         return $files;
@@ -94,17 +94,17 @@ final class SassFileHelper
     public static function hashFilename(string $filename): string
     {
         // Normalize the path to avoid issues with different OS.
-        $normalized = realpath($filename) ?: $filename;
-        $normalized = str_replace('\\', '/', $normalized);
-
-        if (str_starts_with(strtolower(PHP_OS), 'win')) {
-            $normalized = strtolower($normalized);
-        }
+        $normalized = self::normalizePath(realpath($filename) ?: $filename);
 
         // Hash the file path to create a unique filename.
         $hash = substr(sha1($normalized), 0, 10);
 
         return $filename.'-'.$hash;
+    }
+
+    public static function normalizePath(string $path): string
+    {
+        return str_replace('\\', '/', $path);
     }
 
     private function looksLikeGlob(string $path): bool
@@ -121,7 +121,7 @@ final class SassFileHelper
      */
     private function splitGlobBaseDir(string $absoluteGlobPath): array
     {
-        $p = str_replace('\\', '/', $absoluteGlobPath);
+        $p = self::normalizePath($absoluteGlobPath);
 
         $positions = array_filter([
             strpos($p, '*'),
@@ -153,7 +153,7 @@ final class SassFileHelper
      */
     private function globToRegex(string $glob): string
     {
-        $g = str_replace('\\', '/', $glob);
+        $g = self::normalizePath($glob);
 
         $re = '';
         $len = strlen($g);

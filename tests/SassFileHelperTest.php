@@ -15,7 +15,7 @@ class SassFileHelperTest extends TestCase
         $inputs = $helper->resolveSassInput('assets/lib/*.scss', $projectDir);
 
         $this->assertNotEmpty($inputs, 'Expected at least one match for relative glob under fixtures.');
-        $this->assertContains($projectDir.'/assets/lib/libcss.scss', $inputs);
+        $this->assertContains(SassFileHelper::normalizePath($projectDir.'/assets/lib/libcss.scss'), $inputs);
     }
 
     public function testResolveSassInputsRelativeGlobDoubleStarUsesBaseDir(): void
@@ -26,6 +26,6 @@ class SassFileHelperTest extends TestCase
         $inputs = $helper->resolveSassInput('assets/**/*.scss', $projectDir);
 
         $this->assertNotEmpty($inputs, 'Expected at least one match for relative ** glob under fixtures.');
-        $this->assertContains($projectDir.'/assets/lib/libcss.scss', $inputs);
+        $this->assertContains(SassFileHelper::normalizePath($projectDir.'/assets/lib/libcss.scss'), $inputs);
     }
 }
