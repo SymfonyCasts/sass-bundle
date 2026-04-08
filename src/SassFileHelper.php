@@ -1,9 +1,16 @@
 <?php
 
+/*
+ * This file is part of the SymfonyCasts SassBundle package.
+ * Copyright (c) SymfonyCasts <https://symfonycasts.com/>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfonycasts\SassBundle;
 
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
 
 /**
  * @internal
@@ -109,7 +116,7 @@ final class SassFileHelper
 
     private function looksLikeGlob(string $path): bool
     {
-        return strpbrk($path, '*?[') !== false;
+        return false !== strpbrk($path, '*?[');
     }
 
     /**
@@ -127,12 +134,12 @@ final class SassFileHelper
             strpos($p, '*'),
             strpos($p, '?'),
             strpos($p, '['),
-        ], static fn ($v) => $v !== false);
+        ], static fn ($v) => false !== $v);
 
         $firstGlobPos = min($positions);
 
         $slashPos = strrpos(substr($p, 0, $firstGlobPos), '/');
-        if ($slashPos === false) {
+        if (false === $slashPos) {
             return ['.', $p];
         }
 
@@ -156,30 +163,30 @@ final class SassFileHelper
         $g = self::normalizePath($glob);
 
         $re = '';
-        $len = strlen($g);
+        $len = \strlen($g);
 
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; ++$i) {
             $ch = $g[$i];
 
-            if ($ch === '*' && ($i + 1 < $len) && $g[$i + 1] === '*') {
-                $i++;
+            if ('*' === $ch && ($i + 1 < $len) && '*' === $g[$i + 1]) {
+                ++$i;
                 $re .= '.*';
                 continue;
             }
 
-            if ($ch === '*') {
+            if ('*' === $ch) {
                 $re .= '[^/]*';
                 continue;
             }
 
-            if ($ch === '?') {
+            if ('?' === $ch) {
                 $re .= '[^/]';
                 continue;
             }
 
-            if ($ch === '[') {
+            if ('[' === $ch) {
                 $end = strpos($g, ']', $i + 1);
-                if ($end === false) {
+                if (false === $end) {
                     $re .= '\[';
                 } else {
                     $re .= substr($g, $i, $end - $i + 1);
@@ -188,7 +195,7 @@ final class SassFileHelper
                 continue;
             }
 
-            if ($ch === '~') {
+            if ('~' === $ch) {
                 $re .= '\~';
                 continue;
             }
