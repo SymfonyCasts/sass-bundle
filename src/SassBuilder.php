@@ -55,7 +55,7 @@ class SassBuilder
         private readonly string $cssPath,
         private readonly string $projectRootDir,
         private readonly ?string $binaryPath,
-        private readonly bool $searchBinary,
+        private readonly bool $searchForBinary,
         bool|array $sassOptions = [],
     ) {
         if (\is_bool($sassOptions)) {
@@ -186,7 +186,7 @@ class SassBuilder
     {
         $binaryPath = $this->binaryPath;
 
-        if (null === $binaryPath && $this->searchBinary) {
+        if (null === $binaryPath && $this->searchForBinary) {
             $binaryPath = (new ExecutableFinder())->find('sass');
         }
 
