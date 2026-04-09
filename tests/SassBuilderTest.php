@@ -38,6 +38,7 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
+            false,
         );
 
         $process = $builder->runBuild(false);
@@ -55,6 +56,7 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
+            false,
         );
 
         $process = $builder->runBuild(false);
@@ -78,6 +80,7 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
+            false,
             [
                 'embed_sources' => true,
                 'embed_source_map' => true,
@@ -120,6 +123,7 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
+            false,
             [
                 'style' => 'compressed',
                 'source_map' => false,
@@ -149,6 +153,7 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets',
             __DIR__.'/fixtures',
             null,
+            false,
             $phpOptions,
         );
 
@@ -184,6 +189,24 @@ class SassBuilderTest extends TestCase
         $this->assertStringContainsString('WARNING', $process->getErrorOutput());
     }
 
+    public function testSearchForBinary(): void
+    {
+        $builder = new SassBuilder(
+            [__DIR__.'/fixtures/assets/app.scss'],
+            __DIR__.'/fixtures/assets',
+            __DIR__.'/fixtures',
+            null,
+            true,
+        );
+
+        $process = $builder->runBuild(false);
+        $process->wait();
+
+        $this->assertTrue($process->isSuccessful());
+        $this->assertFileExists(__DIR__.'/fixtures/assets/app.output.css');
+        $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/app.output.css'));
+    }
+
     private function createBuilder(array|string $sassFiles, array $options = []): SassBuilder
     {
         return new SassBuilder(
@@ -191,6 +214,7 @@ class SassBuilderTest extends TestCase
             __DIR__.'/fixtures/assets/dist',
             __DIR__.'/fixtures',
             null,
+            false,
             $options,
         );
     }
