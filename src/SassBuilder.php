@@ -75,6 +75,7 @@ class SassBuilder
     public static function guessCssNameFromSassFile(string $sassFile, string $outputDirectory): string
     {
         $fileName = basename($sassFile, '.scss');
+        $fileName = SassFileHelper::hashFilename($fileName);
 
         return $outputDirectory.'/'.$fileName.'.output.css';
     }
@@ -114,12 +115,12 @@ class SassBuilder
     public function getScssCssTargets(): array
     {
         $targets = [];
-        foreach ($this->sassPaths as $sassPath) {
-            if (!is_file($sassPath)) {
-                throw new \Exception(\sprintf('Could not find Sass file: "%s"', $sassPath));
-            }
+        $helper = new SassFileHelper();
 
-            $targets[] = $sassPath.':'.$this->guessCssNameFromSassFile($sassPath, $this->cssPath);
+        foreach ($this->sassPaths as $sassPath) {
+            foreach ($helper->resolveSassInput($sassPath, $this->projectRootDir) as $resolvedFile) {
+                $targets[] = $resolvedFile.':'.$this->guessCssNameFromSassFile($resolvedFile, $this->cssPath);
+            }
         }
 
         return $targets;

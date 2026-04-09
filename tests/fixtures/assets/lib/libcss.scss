@@ -1,0 +1,5 @@
+@use '../tokens' as t;
+
+.class-a {
+    color: t.$color-a;
+}

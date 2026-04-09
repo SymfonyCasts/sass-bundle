@@ -16,7 +16,8 @@
         "symfony/console": "^5.4|^6.3|^7.0|^8.0",
         "symfony/filesystem": "^5.4|^6.3|^7.0|^8.0",
         "symfony/http-client": "^5.4|^6.3|^7.0|^8.0",
-        "symfony/process": "^5.4|^6.3|^7.0|^8.0"
+        "symfony/process": "^5.4|^6.3|^7.0|^8.0",
+        "symfony/finder": "^5.4|^6.3|^7.0|^8.0"
     },
     "require-dev": {
         "matthiasnoback/symfony-config-test": "^5.0|^6.0",

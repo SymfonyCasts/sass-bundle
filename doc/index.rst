@@ -237,6 +237,18 @@ This represents the source Sass file:
             root_sass:
                 - '%kernel.project_dir%/assets/scss/app.scss'
 
+.. note::
+
+    The ``root_sass`` option also supports glob patterns for source Sass files:
+
+    .. code-block:: yaml
+
+        symfonycasts_sass:
+            root_sass:
+                - '%kernel.project_dir%/assets/scss/app.scss'
+                - '%kernel.project_dir%/assets/lib/*.scss'
+                - '%kernel.project_dir%/assets/admin/**/*.scss'
+
 Sass CLI Options
 ~~~~~~~~~~~~~~~~
 
