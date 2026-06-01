@@ -33,4 +33,4 @@ MIT License (MIT): see the [License File](LICENSE.md) for more details.
 
 ## Security Policy
 
-If you discover a security vulnerability, please do not open a public issue or pull request. Instead, please review this repository's <a href="https://github.com/SymfonyCasts/sass-bundle/security">Security Policy</a> for instructions on how to report it responsibly.
+If you discover a security vulnerability, please do not open a public issue or pull request. Instead, please review this repository's [Security Policy](https://github.com/SymfonyCasts/sass-bundle/security) for instructions on how to report it responsibly.
