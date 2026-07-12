@@ -283,6 +283,18 @@ You can configure most of the `Dart Sass CLI options <https://sass-lang.com/docu
             # Don't print deprecated warnings for dependencies. Defaults to false.
             # quiet_deps:
 
+            # Print all deprecation warnings even when they're repetitive. Defaults to false.
+            # verbose:
+
+            # Deprecations to treat as errors. Defaults to empty array.
+            # fatal_deprecation: []
+
+            # Opt in to a deprecation early. Defaults to empty array.
+            # future_deprecation: []
+
+            # Deprecations to ignore. Requires Dart Sass 1.74.0 or higher. Defaults to empty array.
+            # silence_deprecation: []
+
             # Don't compile more files once an error is encountered. Defaults to false.
             # stop_on_error:
 
@@ -330,3 +342,34 @@ And then import bootstrap from ``app.scss`` with:
 .. code-block:: scss
 
     @import 'bootstrap';
+
+Handling Deprecations
+---------------------
+
+Sass announces breaking changes through `deprecations <https://sass-lang.com/documentation/breaking-changes>`_.
+Each one has an ID (such as ``import`` or ``color-functions``) that you can act on:
+
+.. code-block:: yaml
+
+    # config/packages/symfonycasts_sass.yaml
+    symfonycasts_sass:
+        sass_options:
+            # turn these deprecation warnings into errors, so they can't be ignored
+            fatal_deprecation:
+                - 'import'
+
+            # opt in to a deprecation before it is active, to prepare for it
+            future_deprecation:
+                - 'import'
+
+            # hide these deprecation warnings entirely
+            silence_deprecation:
+                - 'color-functions'
+
+Silencing the warnings coming from your dependencies - instead of a specific deprecation -
+is done with ``quiet_deps``.
+
+.. note::
+
+    ``silence_deprecation`` requires Dart Sass 1.74.0 or higher, which is more recent than
+    the binary this bundle downloads by default. See `Using a different binary`_.
