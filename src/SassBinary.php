@@ -160,6 +160,9 @@ class SassBinary
 
     private function getDefaultBinaryPath(): string
     {
-        return $this->binaryDownloadDir.'/dart-sass/sass';
+        // dart-sass ships a "sass.bat" launcher on Windows and a "sass" script elsewhere
+        $binaryName = str_contains(strtolower(\PHP_OS), 'win') ? 'sass.bat' : 'sass';
+
+        return $this->binaryDownloadDir.'/dart-sass/'.$binaryName;
     }
 }
