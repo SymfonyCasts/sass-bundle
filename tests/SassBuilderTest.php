@@ -198,6 +198,26 @@ class SassBuilderTest extends TestCase
         $this->assertStringContainsString('WARNING', $process->getErrorOutput());
     }
 
+    public function testSassOptionDeprecations(): void
+    {
+        // "@import" is not deprecated yet: opting into the deprecation early only warns...
+        $process = $this->createBuilder('file_with_deprecation.scss', [
+            'future_deprecation' => ['import'],
+        ])->runBuild(false);
+        $process->wait();
+        $this->assertTrue($process->isSuccessful());
+        $this->assertStringContainsString('DEPRECATION WARNING', $process->getErrorOutput());
+
+        // ...unless that deprecation is also treated as an error.
+        $process = $this->createBuilder('file_with_deprecation.scss', [
+            'future_deprecation' => ['import'],
+            'fatal_deprecation' => ['import'],
+        ])->runBuild(false);
+        $process->wait();
+        $this->assertFalse($process->isSuccessful());
+        $this->assertStringContainsString('Error: Sass @import rules will be deprecated', $process->getErrorOutput());
+    }
+
     public function testSearchForBinary(): void
     {
         $builder = new SassBuilder(
@@ -311,6 +331,24 @@ class SassBuilderTest extends TestCase
             [
                 '--load-path=foo',
                 '--load-path=bar',
+            ],
+        ];
+        yield 'Deprecation options are expanded' => [
+            [
+                'style' => null,
+                'source_map' => null,
+                'verbose' => true,
+                'fatal_deprecation' => ['import', 'global-builtin'],
+                'future_deprecation' => ['import'],
+                'silence_deprecation' => ['import', 'color-functions'],
+            ],
+            [
+                '--verbose',
+                '--fatal-deprecation=import',
+                '--fatal-deprecation=global-builtin',
+                '--future-deprecation=import',
+                '--silence-deprecation=import',
+                '--silence-deprecation=color-functions',
             ],
         ];
     }
