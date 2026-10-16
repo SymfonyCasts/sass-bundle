@@ -145,6 +145,14 @@ Now, import the core ``bootstrap.scss`` from your ``app.scss`` file:
 
     @import '../../vendor/twbs/bootstrap/scss/bootstrap';
 
+.. tip::
+
+    Importing through a relative path like this works, but Sass then considers Bootstrap
+    to be part of *your* code rather than a dependency. As a result, the ``quiet_deps``
+    option will **not** silence the deprecation warnings Bootstrap emits. To get rid of
+    them, import Bootstrap through a load path instead - see
+    `Register Additional Load Paths`_.
+
 Using Bootswatch Sass
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -330,3 +338,17 @@ And then import bootstrap from ``app.scss`` with:
 .. code-block:: scss
 
     @import 'bootstrap';
+
+Besides being shorter, this is also what makes the ``quiet_deps`` option useful: Sass only
+recognizes a file as belonging to a dependency when it is loaded **through** a load path.
+Third-party libraries tend to emit deprecation warnings you have no control over, and you
+can now silence them - while still seeing the ones coming from your own Sass files:
+
+.. code-block:: yaml
+
+    # config/packages/symfonycasts_sass.yaml
+    symfonycasts_sass:
+        sass_options:
+            load_path:
+                - '%kernel.project_dir%/vendor/twbs/bootstrap/scss'
+            quiet_deps: true
