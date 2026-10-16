@@ -18,6 +18,36 @@ use Symfony\Component\Finder\Finder;
 final class SassFileHelper
 {
     /**
+     * The extensions Dart Sass compiles, both of which this bundle accepts.
+     */
+    public const SASS_EXTENSIONS = ['.scss', '.sass'];
+
+    public static function isSassFile(string $path): bool
+    {
+        foreach (self::SASS_EXTENSIONS as $extension) {
+            if (str_ends_with($path, $extension)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Removes the Sass extension from a path, leaving anything else untouched.
+     */
+    public static function stripSassExtension(string $path): string
+    {
+        foreach (self::SASS_EXTENSIONS as $extension) {
+            if (str_ends_with($path, $extension)) {
+                return substr($path, 0, -\strlen($extension));
+            }
+        }
+
+        return $path;
+    }
+
+    /**
      * Expands a configured sass path into concrete input files.
      *
      * Supports:

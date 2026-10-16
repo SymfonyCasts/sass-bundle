@@ -74,7 +74,7 @@ class SassBuilder
      */
     public static function guessCssNameFromSassFile(string $sassFile, string $outputDirectory): string
     {
-        $fileName = basename($sassFile, '.scss');
+        $fileName = basename(SassFileHelper::stripSassExtension($sassFile));
         $fileName = SassFileHelper::hashFilename($fileName);
 
         return $outputDirectory.'/'.$fileName.'.output.css';

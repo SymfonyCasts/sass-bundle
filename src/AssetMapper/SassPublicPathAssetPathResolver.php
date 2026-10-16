@@ -10,6 +10,7 @@
 namespace Symfonycasts\SassBundle\AssetMapper;
 
 use Symfony\Component\AssetMapper\Path\PublicAssetsPathResolverInterface;
+use Symfonycasts\SassBundle\SassFileHelper;
 
 class SassPublicPathAssetPathResolver implements PublicAssetsPathResolverInterface
 {
@@ -21,8 +22,8 @@ class SassPublicPathAssetPathResolver implements PublicAssetsPathResolverInterfa
     {
         $path = $this->decorator->resolvePublicPath($logicalPath);
 
-        if (str_ends_with($path, '.scss')) {
-            return substr($path, 0, -5).'.css';
+        if (SassFileHelper::isSassFile($path)) {
+            return SassFileHelper::stripSassExtension($path).'.css';
         }
 
         return $path;
@@ -36,8 +37,8 @@ class SassPublicPathAssetPathResolver implements PublicAssetsPathResolverInterfa
 
         $path = $this->decorator->getPublicFilesystemPath();
 
-        if (str_ends_with($path, '.scss')) {
-            return substr($path, 0, -5).'.css';
+        if (SassFileHelper::isSassFile($path)) {
+            return SassFileHelper::stripSassExtension($path).'.css';
         }
 
         return $path;
