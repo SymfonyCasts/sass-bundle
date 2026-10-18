@@ -13,6 +13,7 @@ return (new \PhpCsFixer\Config())
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'phpdoc_to_comment' => false,
+        'declare_strict_types' => false,
         'header_comment' => [
             'header' => <<<EOF
 This file is part of the SymfonyCasts SassBundle package.

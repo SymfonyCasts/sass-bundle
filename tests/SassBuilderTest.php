@@ -212,8 +212,8 @@ class SassBuilderTest extends TestCase
         $process->wait();
 
         $this->assertTrue($process->isSuccessful());
-        $this->assertFileExists(__DIR__.'/fixtures/assets/app.output.css');
-        $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/app.output.css'));
+        $this->assertFileExists(__DIR__.'/fixtures/assets/'.self::getFileName('app'));
+        $this->assertStringContainsString('color: red;', file_get_contents(__DIR__.'/fixtures/assets/'.self::getFileName('app')));
     }
 
     private function createBuilder(array|string $sassFiles, array $options = []): SassBuilder
