@@ -16,7 +16,7 @@ use Symfonycasts\SassBundle\SassBuilder;
 
 class SassCssCompilerTest extends TestCase
 {
-    public function testSupports()
+    public function testSupports(): void
     {
         $builder = $this->createMock(SassBuilder::class);
 
@@ -41,7 +41,7 @@ class SassCssCompilerTest extends TestCase
         $this->assertTrue($compilerRelativePath->supports($asset), 'Supports relative paths');
     }
 
-    public function testSupportsGlob()
+    public function testSupportsGlob(): void
     {
         $builder = $this->createMock(SassBuilder::class);
 
