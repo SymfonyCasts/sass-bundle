@@ -294,13 +294,14 @@ You can configure most of the `Dart Sass CLI options <https://sass-lang.com/docu
             # Print all deprecation warnings even when they're repetitive. Defaults to false.
             # verbose:
 
-            # Deprecations to treat as errors. Defaults to empty array.
+            # Deprecations to treat as errors. You may also pass a Sass version to include
+            # any behavior deprecated in or before it. Defaults to empty array.
             # fatal_deprecation: []
 
             # Opt in to a deprecation early. Defaults to empty array.
             # future_deprecation: []
 
-            # Deprecations to ignore. Requires Dart Sass 1.74.0 or higher. Defaults to empty array.
+            # Deprecations to ignore. Requires the Sass binary to be at least 1.74.0. Defaults to empty array.
             # silence_deprecation: []
 
             # Don't compile more files once an error is encountered. Defaults to false.
@@ -390,6 +391,11 @@ Each one has an ID (such as ``import`` or ``color-functions``) that you can act 
             # hide these deprecation warnings entirely
             silence_deprecation:
                 - 'color-functions'
+
+Each of these options also accepts a single ID instead of a list (e.g.
+``silence_deprecation: 'color-functions'``), and ``fatal_deprecation`` accepts a
+Sass version too (e.g. ``'1.77.0'``), to treat every deprecation introduced in or
+before that version as an error.
 
 Silencing the warnings coming from your dependencies - instead of a specific deprecation -
 is done with ``quiet_deps``.

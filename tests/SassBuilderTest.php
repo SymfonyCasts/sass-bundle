@@ -198,17 +198,20 @@ class SassBuilderTest extends TestCase
         $this->assertStringContainsString('WARNING', $process->getErrorOutput());
     }
 
-    public function testSassOptionDeprecations(): void
+    public function testSassOptionFutureDeprecation(): void
     {
-        // "@import" is not deprecated yet: opting into the deprecation early only warns...
+        // "@import" is not deprecated yet: opting into the deprecation early only warns
         $process = $this->createBuilder('file_with_deprecation.scss', [
             'future_deprecation' => ['import'],
         ])->runBuild(false);
         $process->wait();
         $this->assertTrue($process->isSuccessful());
         $this->assertStringContainsString('DEPRECATION WARNING', $process->getErrorOutput());
+    }
 
-        // ...unless that deprecation is also treated as an error.
+    public function testSassOptionFatalDeprecation(): void
+    {
+        // the same opted-in deprecation, treated as an error, makes the build fail
         $process = $this->createBuilder('file_with_deprecation.scss', [
             'future_deprecation' => ['import'],
             'fatal_deprecation' => ['import'],

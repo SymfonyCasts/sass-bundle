@@ -46,13 +46,13 @@ class SassBuilder
     private ?SymfonyStyle $output = null;
 
     /**
-     * @var array<string, bool|string|list<string>>
+     * @var array<string, bool|string|list<string>|null>
      */
     private array $sassOptions;
 
     /**
-     * @param array<string>                           $sassPaths
-     * @param array<string, bool|string|list<string>> $sassOptions
+     * @param array<string>                                $sassPaths
+     * @param array<string, bool|string|list<string>|null> $sassOptions
      */
     public function __construct(
         private readonly array $sassPaths,
@@ -131,7 +131,7 @@ class SassBuilder
     }
 
     /**
-     * @param array<string, bool|array|string> $options
+     * @param array<string, bool|string|list<string>|null> $options
      *
      * @return list<string>
      */
@@ -203,7 +203,7 @@ class SassBuilder
      *
      * Options are converted from PHP option names to CLI option names.
      *
-     * @param array<string, bool|array|string> $options
+     * @param array<string, bool|string|list<string>|null> $options
      *
      * @see getOptionMap()
      */

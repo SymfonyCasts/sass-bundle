@@ -126,6 +126,42 @@ final class ConfigurationTest extends TestCase
         ]);
     }
 
+    /**
+     * @dataProvider provideDeprecationOptions
+     */
+    public function testDeprecationOptionAcceptsASingleId(string $option): void
+    {
+        $this->assertProcessedConfigurationEquals([
+            'symfonycasts_sass' => [
+                'sass_options' => [
+                    $option => 'import',
+                ],
+            ],
+        ], ['sass_options' => [$option => ['import']]], 'sass_options.'.$option);
+    }
+
+    /**
+     * @dataProvider provideDeprecationOptions
+     */
+    public function testDeprecationOptionTurnsNullIntoAnEmptyList(string $option): void
+    {
+        // an option that is null must not become [null], which would pass an empty value to the binary
+        $this->assertProcessedConfigurationEquals([
+            'symfonycasts_sass' => [
+                'sass_options' => [
+                    $option => null,
+                ],
+            ],
+        ], ['sass_options' => [$option => []]], 'sass_options.'.$option);
+    }
+
+    public static function provideDeprecationOptions(): iterable
+    {
+        yield ['fatal_deprecation'];
+        yield ['future_deprecation'];
+        yield ['silence_deprecation'];
+    }
+
     public function testSassOptionsWithInvalidStyle(): void
     {
         $this->assertConfigurationIsInvalid([
