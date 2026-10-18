@@ -169,6 +169,23 @@ class SassBuilderTest extends TestCase
         $this->assertSame($expectedCliOptions, $builder->getBuildOptions());
     }
 
+    /**
+     * @dataProvider provideSassFilesForCssName
+     */
+    public function testGuessCssNameFromSassFile(string $sassFile): void
+    {
+        $this->assertSame(
+            '/output/'.SassFileHelper::hashFilename('app').'.output.css',
+            SassBuilder::guessCssNameFromSassFile($sassFile, '/output'),
+        );
+    }
+
+    public static function provideSassFilesForCssName(): iterable
+    {
+        yield 'scss' => ['/project/assets/styles/app.scss'];
+        yield 'sass' => ['/project/assets/styles/app.sass'];
+    }
+
     public function testSassOptionStopOnError(): void
     {
         $process = $this->createBuilder(['file_error_foo.scss', 'file_error_bar.scss'])->runBuild(false);

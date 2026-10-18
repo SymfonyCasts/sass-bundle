@@ -20,7 +20,7 @@ final class SassFileHelper
     /**
      * The extensions Dart Sass compiles, both of which this bundle accepts.
      */
-    public const SASS_EXTENSIONS = ['.scss', '.sass'];
+    private const SASS_EXTENSIONS = ['.scss', '.sass'];
 
     public static function isSassFile(string $path): bool
     {
