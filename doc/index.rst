@@ -394,8 +394,9 @@ Each one has an ID (such as ``import`` or ``color-functions``) that you can act 
 
 Each of these options also accepts a single ID instead of a list (e.g.
 ``silence_deprecation: 'color-functions'``), and ``fatal_deprecation`` accepts a
-Sass version too (e.g. ``'1.77.0'``), to treat every deprecation introduced in or
-before that version as an error.
+Sass version too (e.g. ``'1.33.0'``), to treat every deprecation introduced in or
+before that version as an error. That version must not be newer than the Sass
+binary in use, otherwise the build fails with an "Invalid version" error.
 
 Silencing the warnings coming from your dependencies - instead of a specific deprecation -
 is done with ``quiet_deps``.

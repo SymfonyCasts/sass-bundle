@@ -200,7 +200,12 @@ class SassBuilderTest extends TestCase
 
     public function testSassOptionFutureDeprecation(): void
     {
-        // "@import" is not deprecated yet: opting into the deprecation early only warns
+        // "@import" is not deprecated yet: no warning until the deprecation is opted into early
+        $process = $this->createBuilder('file_with_deprecation.scss')->runBuild(false);
+        $process->wait();
+        $this->assertTrue($process->isSuccessful());
+        $this->assertStringNotContainsString('DEPRECATION WARNING', $process->getErrorOutput());
+
         $process = $this->createBuilder('file_with_deprecation.scss', [
             'future_deprecation' => ['import'],
         ])->runBuild(false);
@@ -211,14 +216,18 @@ class SassBuilderTest extends TestCase
 
     public function testSassOptionFatalDeprecation(): void
     {
-        // the same opted-in deprecation, treated as an error, makes the build fail
-        $process = $this->createBuilder('file_with_deprecation.scss', [
-            'future_deprecation' => ['import'],
-            'fatal_deprecation' => ['import'],
+        // "slash-div" is an active deprecation: it only warns by default
+        $process = $this->createBuilder('file_with_slash_div.scss')->runBuild(false);
+        $process->wait();
+        $this->assertTrue($process->isSuccessful());
+        $this->assertStringContainsString('DEPRECATION WARNING', $process->getErrorOutput());
+
+        $process = $this->createBuilder('file_with_slash_div.scss', [
+            'fatal_deprecation' => ['slash-div'],
         ])->runBuild(false);
         $process->wait();
         $this->assertFalse($process->isSuccessful());
-        $this->assertStringContainsString('Error: Sass @import rules will be deprecated', $process->getErrorOutput());
+        $this->assertStringContainsString('the slash-div deprecation to be fatal', $process->getErrorOutput());
     }
 
     public function testSearchForBinary(): void
