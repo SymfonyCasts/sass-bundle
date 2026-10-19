@@ -200,7 +200,8 @@ class SassBuilderTest extends TestCase
 
     public function testSassOptionFutureDeprecation(): void
     {
-        // "@import" is not deprecated yet: no warning until the deprecation is opted into early
+        // "@import" is not deprecated yet in the pinned binary (it is since Sass 1.80),
+        // so there's no warning until the deprecation is opted into early
         $process = $this->createBuilder('file_with_deprecation.scss')->runBuild(false);
         $process->wait();
         $this->assertTrue($process->isSuccessful());
