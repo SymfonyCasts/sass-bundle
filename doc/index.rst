@@ -38,6 +38,11 @@ Start by writing your first Sass file ``assets/styles/app.scss``, and let's add 
       background: $red;
     }
 
+.. note::
+
+    Both syntaxes are supported: this guide uses ``.scss`` throughout, and ``.sass`` files
+    work the same way.
+
 Then point your styles in your template:
 
 .. code-block:: html+twig

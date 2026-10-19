@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\MappedAsset;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfonycasts\SassBundle\SassBuilder;
 
 class FunctionalTest extends KernelTestCase
 {
@@ -52,5 +53,24 @@ class FunctionalTest extends KernelTestCase
         } else {
             $this->assertStringContainsString('color: red', $asset->content);
         }
+    }
+
+    public function testBuildCssFromIndentedSyntax(): void
+    {
+        self::bootKernel();
+
+        $builder = self::getContainer()->get('sass.builder');
+        \assert($builder instanceof SassBuilder);
+        $process = $builder->runBuild(false);
+        $process->wait();
+        $this->assertTrue($process->isSuccessful(), $process->getErrorOutput());
+
+        $assetMapper = self::getContainer()->get('asset_mapper');
+        \assert($assetMapper instanceof AssetMapperInterface);
+
+        $asset = $assetMapper->getAsset('indented_syntax.sass');
+        $this->assertInstanceOf(MappedAsset::class, $asset);
+        $this->assertStringEndsWith('.css', $asset->publicPath);
+        $this->assertStringContainsString('.indented{color:blue}', $asset->content);
     }
 }

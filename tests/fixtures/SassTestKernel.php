@@ -51,7 +51,7 @@ class SassTestKernel extends Kernel
         ]);
 
         $container->loadFromExtension('symfonycasts_sass', [
-            'root_sass' => [__DIR__.'/assets/styles/app.scss'],
+            'root_sass' => [__DIR__.'/assets/indented_syntax.sass'],
             'binary' => null,
             'sass_options' => [
                 'style' => 'compressed',
