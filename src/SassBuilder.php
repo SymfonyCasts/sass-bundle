@@ -34,6 +34,10 @@ class SassBuilder
         // Warnings
         '--[no-]quiet' => null,                 // Don't print warnings.
         '--[no-]quiet-deps' => null,            // Don't print deprecation warnings for dependencies.
+        '--[no-]verbose' => null,               // Print all deprecation warnings even when they're repetitive.
+        '--fatal-deprecation' => null,          // Deprecations to treat as errors.
+        '--future-deprecation' => null,         // Opt in to a deprecation early.
+        '--silence-deprecation' => null,        // Deprecations to ignore.
         // Other
         '--[no-]stop-on-error' => null,         // Don't compile more files once an error is encountered.
         '--[no-]trace' => null,                 // Print full Dart stack traces for exceptions.
@@ -42,13 +46,13 @@ class SassBuilder
     private ?SymfonyStyle $output = null;
 
     /**
-     * @var array<string, bool|string>
+     * @var array<string, bool|string|list<string>|null>
      */
     private array $sassOptions;
 
     /**
-     * @param array<string>              $sassPaths
-     * @param array<string, bool|string> $sassOptions
+     * @param array<string>                                $sassPaths
+     * @param array<string, bool|string|list<string>|null> $sassOptions
      */
     public function __construct(
         private readonly array $sassPaths,
@@ -127,7 +131,7 @@ class SassBuilder
     }
 
     /**
-     * @param array<string, bool|array|string> $options
+     * @param array<string, bool|string|list<string>|null> $options
      *
      * @return list<string>
      */
@@ -199,7 +203,7 @@ class SassBuilder
      *
      * Options are converted from PHP option names to CLI option names.
      *
-     * @param array<string, bool|array|string> $options
+     * @param array<string, bool|string|list<string>|null> $options
      *
      * @see getOptionMap()
      */
